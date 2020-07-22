@@ -16,23 +16,6 @@ class Login extends Component {
             errors: {}
         };
     }
-
-    componentDidMount() {
-        if (this.props.auth.isAuthenticated) {
-            this.props.history.push('/dashboard');
-        }
-    }
-
-    componentDidUpdate() {
-        // if (this.props.auth.isAuthenticated) {
-        //     ReactDom.render(
-        //         <BrowserRouter>
-        //             <Route path='/dashboard' component={Dashboard} />
-        //         </BrowserRouter>
-        //     );
-        // }
-    }
-    
     
     onChange = e => {
         this.setState({ [e.target.id]: e.target.value });

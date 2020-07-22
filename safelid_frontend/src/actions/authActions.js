@@ -1,4 +1,5 @@
-import axios from "axios";
+import axios from 'axios';
+import history from '../history';
 // import jwt_decode from "jwt-decode";
 import { 
     USER_LOADING, 
@@ -11,7 +12,7 @@ import {
     GET_ERRORS,
     AUTH_ERROR,
     SET_CURRENT_USER
-} from "./types";
+} from './types';
 
 
 export const registerUser = userData => dispatch => {
@@ -23,6 +24,7 @@ export const registerUser = userData => dispatch => {
     
     axios.post('http://localhost:5000/register', userData, config)
         .then(res => {
+            history.push('/login');
             dispatch(setCurrentUser(res.data));
         })
         .catch(err => {
@@ -39,6 +41,7 @@ export const loginUser = userData => dispatch => {
     
     axios.post('http://localhost:5000/login', userData, config)
         .then(res => {
+            history.push('/dashboard');
             dispatch({
                 type: LOGIN_SUCCESS
             });
@@ -50,14 +53,15 @@ export const loginUser = userData => dispatch => {
         });
 }
 
-export const logoutUser = () => {
-    return {
+export const logoutUser = () => dispatch => {
+    history.push('/login');
+    dispatch({
         type: LOGOUT_SUCCESS
-    }
+    });
 }
 
 export const loadUser = () => (dispatch, getState) => {
-    dispatch(userLoading());
+    // dispatch(userLoading());
 
     const token = getState().auth.token;
     const config = {
@@ -68,8 +72,6 @@ export const loadUser = () => (dispatch, getState) => {
     if (token) {
         config.headers['x-auth-token'] = token;
     }
-
-    console.log(config);
 
     axios.get('http://localhost:5000/userauth', config)
         .then(res => {
