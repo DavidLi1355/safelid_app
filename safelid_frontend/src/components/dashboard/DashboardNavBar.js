@@ -6,7 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../format.css';
 
 
-class UserNavBar extends Component {
+class DashboardNavBar extends Component {
     state = {
         isOpen: false
     }
@@ -53,7 +53,7 @@ class UserNavBar extends Component {
     }
 }
 
-UserNavBar.propTypes = {
+DashboardNavBar.propTypes = {
     auth: PropTypes.object.isRequired
 }
 
@@ -64,4 +64,4 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     {logoutUser}
-)(UserNavBar);
+)(DashboardNavBar);

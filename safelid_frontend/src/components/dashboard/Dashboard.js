@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import UserNavBar from './UserNavBar';
+import DashboardNavBar from './DashboardNavBar';
 
 class Dashboard extends Component {
     componentDidMount() {
@@ -28,7 +28,7 @@ class Dashboard extends Component {
     render() {
         return (
             <div>
-                <UserNavBar />
+                <DashboardNavBar />
                 <Switch>
                     {/* <Route path='/login' component={ Login } /> */}
                 </Switch>

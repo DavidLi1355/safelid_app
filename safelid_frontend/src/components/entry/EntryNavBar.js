@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../format.css';
 
-class MainNavBar extends Component {
+class EntryNavBar extends Component {
     state = {
         isOpen: false
     }
@@ -44,4 +44,4 @@ class MainNavBar extends Component {
     }
 }
 
-export default MainNavBar;
+export default EntryNavBar;

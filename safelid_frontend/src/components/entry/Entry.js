@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import MainNavBar from './MainNavBar';
+import EntryNavBar from './EntryNavBar';
 import Login from './Login';
 import Register from './Register';
 
@@ -18,7 +18,7 @@ class Entry extends Component {
     render() {
         return (
             <div>
-                <MainNavBar />
+                <EntryNavBar />
                 <Switch>
                     <Route path='/login' component={ Login } />
                     <Route path='/register' component={ Register } />
