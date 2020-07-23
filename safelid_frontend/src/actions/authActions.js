@@ -13,8 +13,7 @@ import {
     SET_CURRENT_USER
 } from './types';
 
-
-export const registerUser = userData => dispatch => {
+export const registerUser = (userData, history) => dispatch => {
     const config = {
         headers: {
             "Content-type": "application/json"
@@ -23,6 +22,7 @@ export const registerUser = userData => dispatch => {
     
     axios.post('http://localhost:5000/register', userData, config)
         .then(res => {
+            history.push('/login');
             dispatch(setCurrentUser(res.data));
         })
         .catch(err => {

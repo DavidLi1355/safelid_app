@@ -33,7 +33,7 @@ class Register extends Component {
             confirm_password: this.state.confirm_password,
         };
     
-        this.props.registerUser(userData);
+        this.props.registerUser(userData, this.props.history);
     };
 
     render() {
