@@ -8,8 +8,17 @@ import Login from './Login';
 import Register from './Register';
 
 class Entry extends Component {
+    componentDidMount() {
+        console.log('Entry componentDidMount');
+        this.redirectToDashboard();
+    }
+
     componentDidUpdate() {
-        console.log('entry componentdidupdate');
+        console.log('Entry componentDidUpdate');
+        this.redirectToDashboard();
+    }
+
+    redirectToDashboard = () => {
         if (this.props.auth.isAuthenticated) {
             this.props.history.push('/dashboard');
         }
