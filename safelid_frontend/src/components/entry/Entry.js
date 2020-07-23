@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Route, Switch } from 'react-router-dom';
-import { loadUser } from '../../actions/authActions';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -10,7 +9,7 @@ import Register from './Register';
 
 class Entry extends Component {
     componentDidUpdate() {
-        console.log('componentdidupdate')
+        console.log('entry componentdidupdate');
         if (this.props.auth.isAuthenticated) {
             this.props.history.push('/dashboard');
         }

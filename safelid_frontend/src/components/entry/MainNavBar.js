@@ -15,21 +15,21 @@ class MainNavBar extends Component {
         const {isOpen} = this.state;
         return (
             <div>
-                <nav class="navbar navbar-expand-sm navbar-light bg-light">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="/">SafeLid</a>
+                <nav className="navbar navbar-expand-sm navbar-light bg-light">
+                    <div className="container-fluid">
+                        <a className="navbar-brand" href="/">SafeLid</a>
 
-                        <button class="navbar-toggler collapsed" type="button" onClick={this.toggle}>
-                            <span class="navbar-toggler-icon" />
+                        <button className="navbar-toggler collapsed" type="button" onClick={this.toggle}>
+                            <span className="navbar-toggler-icon" />
                         </button>
 
-                        <div class={(isOpen ? "" : "collapse") + " navbar-collapse"} id="options">
-                            <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-                                <li class="nav-item active">
-                                <a class="nav-link" href="/login">Login</a>
+                        <div className={(isOpen ? "" : "collapse") + " navbar-collapse"} id="options">
+                            <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
+                                <li className="nav-item active">
+                                <a className="nav-link" href="/login">Login</a>
                                 </li>
-                                <li class="nav-item active">
-                                <a class="nav-link" href="/register">Register</a>
+                                <li className="nav-item active">
+                                <a className="nav-link" href="/register">Register</a>
                                 </li>
                             </ul>
                         </div>

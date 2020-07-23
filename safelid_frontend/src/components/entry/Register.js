@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { registerUser } from '../../actions/authActions';
 import PropTypes from 'prop-types';
@@ -41,56 +40,59 @@ class Register extends Component {
         const { error } = this.props;
         
         return (
-            <div class="container row col-11 col-sm-9 col-md-7 col-lg-5 mx-auto">
-                <div class="card card-body card-format my-4">
-                    <h5 class="card-title text-center">Register</h5>
-                    <form noValidate onSubmit={this.onSubmit} class="form-format">
+            <div className="container row col-11 col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div className="card card-body card-format my-4">
+                    <h5 className="card-title text-center">Register</h5>
+                    <form noValidate onSubmit={this.onSubmit} className="form-format">
                         <div>
-                            <label for="name">Name</label>
+                            <label htmlFor="name">Name</label>
                             <input 
                                 onChange={this.onChange} 
                                 type="text" 
-                                class="form-control" 
+                                className="form-control" 
                                 id="name" 
                             />
+                            <span>
+                                {error.name}
+                            </span>
                         </div>
                         <div>
-                            <label for="email">Email Address</label>
+                            <label htmlFor="email">Email Address</label>
                             <input 
                                 onChange={this.onChange} 
                                 type="email" 
-                                class="form-control" 
+                                className="form-control" 
                                 id="email"
                             />
                         </div>
                         <div>
-                            <label for="username">Username</label>
+                            <label htmlFor="username">Username</label>
                             <input 
                                 onChange={this.onChange} 
                                 type="text" 
-                                class="form-control" 
+                                className="form-control" 
                                 id="username"
                             />
                         </div>
                         <div>
-                            <label for="password">Password</label>
+                            <label htmlFor="password">Password</label>
                             <input 
                                 onChange={this.onChange} 
                                 type="password" 
-                                class="form-control" 
+                                className="form-control" 
                                 id="password"
                             />
                         </div>
                         <div>
-                            <label for="password">Confirm Password</label>
+                            <label htmlFor="password">Confirm Password</label>
                             <input 
                                 onChange={this.onChange} 
                                 type="password" 
-                                class="form-control" 
+                                className="form-control" 
                                 id="confirm_password"
                             />
                         </div>
-                        <button type="submit" class="btn btn-primary">Register</button>
+                        <button type="submit" className="btn btn-primary">Register</button>
                     </form>
                 </div>
             </div>

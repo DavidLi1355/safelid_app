@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import history from './history';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Entry from './components/entry/Entry';
 import Dashboard from './components/user/Dashboard';

@@ -1,6 +1,5 @@
 import axios from 'axios';
-import history from '../history';
-// import jwt_decode from "jwt-decode";
+
 import { 
     USER_LOADING, 
     USER_LOADED,
@@ -24,7 +23,6 @@ export const registerUser = userData => dispatch => {
     
     axios.post('http://localhost:5000/register', userData, config)
         .then(res => {
-            // history.push('/login');
             dispatch(setCurrentUser(res.data));
         })
         .catch(err => {
@@ -41,7 +39,6 @@ export const loginUser = userData => dispatch => {
     
     axios.post('http://localhost:5000/login', userData, config)
         .then(res => {
-            // history.push('/dashboard');
             dispatch({
                 type: LOGIN_SUCCESS
             });
@@ -54,7 +51,6 @@ export const loginUser = userData => dispatch => {
 }
 
 export const logoutUser = () => dispatch => {
-    // history.push('/login');
     dispatch({
         type: LOGOUT_SUCCESS
     });
@@ -108,4 +104,3 @@ export const getErrors = errors => {
         payload: errors
     };
 }
-
