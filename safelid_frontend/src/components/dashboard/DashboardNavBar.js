@@ -24,24 +24,24 @@ class DashboardNavBar extends Component {
         const {isOpen} = this.state;
         return (
             <div>
-                <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                    <div class="container-fluid">
-                        <form class="form-inline">
-                            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
+                <nav className="navbar fixed-top navbar-expand-sm navbar-light bg-light">
+                    <div className="container-fluid">
+                        <form className="form-inline">
+                            <input className="form-control mr-sm" type="search" placeholder="Search" aria-label="Search" />
                         </form>
 
-                        <button class="navbar-toggler collapsed" type="button" onClick={this.toggle}>
-                            <span class="navbar-toggler-icon" />
+                        <button className="navbar-toggler collapsed" type="button" onClick={this.toggle}>
+                            <span className="navbar-toggler-icon" />
                         </button>
 
-                        <div class={(isOpen ? "" : "collapse") + " navbar-collapse"} id="options">
-                            <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+                        <div className={(isOpen ? "" : "collapse") + " navbar-collapse"} id="options">
+                            <ul className="navbar-nav ml-auto mt-2 mt-lg-0">
                                 
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="/dashboard/setting">Setting</a>
+                                <li className="nav-item active">
+                                    <a className="nav-link" href="/dashboard/setting">Setting</a>
                                 </li>
-                                <li class="nav-item active">
-                                    <a class="nav-link" href="#" onClick={this.logout}>Logout</a>
+                                <li className="nav-item active">
+                                    <a className="nav-link" href="#" onClick={this.logout}>Logout</a>
                                 </li>
                             </ul>
                         </div>

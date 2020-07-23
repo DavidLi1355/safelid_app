@@ -5,7 +5,7 @@ import { logoutUser } from '../../actions/authActions';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DashboardNavBar from './DashboardNavBar';
-import ItemTree from './ItemTree';
+import ItemSidebar from './ItemSidebar';
 import ItemContainer from './ItemContainer';
 
 class Dashboard extends Component {
@@ -32,11 +32,17 @@ class Dashboard extends Component {
 
     render() {
         return (
-            <div>
+            <>
                 <DashboardNavBar />
-                <ItemTree />
-                <ItemContainer />
-            </div>
+                <div className='container-fluid'>
+                    <div className='row'>
+                        <div className='col-sm-3 sidebar sticky-sidebar'><ItemSidebar /></div>
+                        <div className='col-sm-9'><ItemContainer /></div>
+                        
+                    </div>
+                </div>
+                
+            </>
         );
     }
 }

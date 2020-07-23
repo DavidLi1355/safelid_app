@@ -15,7 +15,7 @@ class EntryNavBar extends Component {
         const {isOpen} = this.state;
         return (
             <div>
-                <nav className="navbar navbar-expand-sm navbar-light bg-light">
+                <nav className="navbar fixed-top navbar-expand-sm navbar-light bg-light">
                     <div className="container-fluid">
                         <a className="navbar-brand" href="/">SafeLid</a>
 
