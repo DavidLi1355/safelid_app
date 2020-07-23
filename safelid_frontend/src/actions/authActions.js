@@ -24,7 +24,7 @@ export const registerUser = userData => dispatch => {
     
     axios.post('http://localhost:5000/register', userData, config)
         .then(res => {
-            history.push('/login');
+            // history.push('/login');
             dispatch(setCurrentUser(res.data));
         })
         .catch(err => {
@@ -41,7 +41,7 @@ export const loginUser = userData => dispatch => {
     
     axios.post('http://localhost:5000/login', userData, config)
         .then(res => {
-            history.push('/dashboard');
+            // history.push('/dashboard');
             dispatch({
                 type: LOGIN_SUCCESS
             });
@@ -54,14 +54,14 @@ export const loginUser = userData => dispatch => {
 }
 
 export const logoutUser = () => dispatch => {
-    history.push('/login');
+    // history.push('/login');
     dispatch({
         type: LOGOUT_SUCCESS
     });
 }
 
 export const loadUser = () => (dispatch, getState) => {
-    // dispatch(userLoading());
+    dispatch(userLoading());
 
     const token = getState().auth.token;
     const config = {

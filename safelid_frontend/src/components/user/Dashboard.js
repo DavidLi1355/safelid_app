@@ -11,15 +11,17 @@ import store from '../../store';
 import { loadUser } from '../../actions/authActions';
 
 class Dashboard extends Component {
-    componentDidMount() {
-        // console.log(this.props.auth);
+    componentDidUpdate() {
+        if (!this.props.auth.isAuthenticated && !this.props.auth.isLoading) {
+            this.props.history.push('/login');
+        }
     }
 
-    // componentDidUpdate() {
-    //     if (!this.props.auth.isAuthenticated) {
-    //         history.push('/login');
-    //     }
-    // }
+    componentDidUpdate() {
+        if (!this.props.auth.isAuthenticated && !this.props.auth.isLoading) {
+            this.props.history.push('/login');
+        }
+    }
     
     logout = e => {
         e.preventDefault();
@@ -29,12 +31,10 @@ class Dashboard extends Component {
     render() {
         return (
             <div>
-                {/* <Router history={history}> */}
-                    <UserNavBar />
-                    <Switch>
-                        {/* <Route path='/login' component={ Login } /> */}
-                    </Switch>
-                {/* </Router> */}
+                <UserNavBar />
+                <Switch>
+                    {/* <Route path='/login' component={ Login } /> */}
+                </Switch>
             </div>
         );
     }

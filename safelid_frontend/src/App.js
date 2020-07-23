@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import history from './history';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Entry from './components/entry/Entry';
@@ -17,12 +17,12 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <Router history={history}>
+        <BrowserRouter>
           <Switch>
             <Route path='/dashboard' component={ Dashboard } />
             <Route path='/' component={ Entry } />
           </Switch>
-        </Router>
+        </BrowserRouter>
       </Provider>
     );
   }  

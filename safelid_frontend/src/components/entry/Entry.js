@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Route, Switch } from 'react-router-dom';
-import history from '../../history';
-import store from '../../store';
 import { loadUser } from '../../actions/authActions';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -11,19 +9,14 @@ import Login from './Login';
 import Register from './Register';
 
 class Entry extends Component {
-    componentDidMount() {
+    componentDidUpdate() {
+        console.log('componentdidupdate')
         if (this.props.auth.isAuthenticated) {
-            history.push('/dashboard');
+            this.props.history.push('/dashboard');
         }
     }
-    
-    // componentDidUpdate() {
-    //     if (this.props.auth.isAuthenticated) {
-    //         history.push('/dashboard');
-    //     }
-    // }
 
-    render() {        
+    render() {
         return (
             <div>
                 <MainNavBar />
@@ -38,13 +31,16 @@ class Entry extends Component {
 
 Entry.propTypes = {
     auth: PropTypes.object.isRequired,
-    error: PropTypes.object.isRequired
+    error: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
     auth: state.auth,
-    error: state.error
+    error: state.error,
 });
+
+// export default withRouter(Entry);
 
 export default connect(
     mapStateToProps
