@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { registerUser } from '../../actions/authActions';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Form.css'
+import './Form.css';
 
 class Register extends Component {
     constructor() {
@@ -41,7 +41,7 @@ class Register extends Component {
         
         return (
             <div className="container row col-11 col-sm-9 col-md-7 col-lg-5 mx-auto">
-                <div className="card card-body card-format my-4">
+                <div className="card card-body card-format">
                     <h5 className="card-title text-center">Register</h5>
                     <form noValidate onSubmit={this.onSubmit} className="form-format">
                         <div>

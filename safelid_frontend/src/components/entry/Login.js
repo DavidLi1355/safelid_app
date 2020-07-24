@@ -34,7 +34,7 @@ class Login extends Component {
 
         return (
             <div className="container-sm row col-11 col-sm-9 col-md-7 col-lg-5 mx-auto">
-                <div className="card card-body card-format my-4">
+                <div className="card card-body card-format">
                     <h5 className="card-title text-center">Login</h5>
                     <form noValidate onSubmit={this.onSubmit}>
                         <div>

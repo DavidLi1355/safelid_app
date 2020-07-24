@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import './Upload.css';
 
 class ItemSidebar extends Component {
     constructor() {
@@ -16,20 +17,31 @@ class ItemSidebar extends Component {
         };
     }
 
+    onUpload = e => {
+        console.log(e.target.files[1]);
+    }
+
+
     render() {
         const rend_folder = this.state.folders.map((folder) => (
             <div key={folder.id}>
-                <li className='nav-item'>{folder.name}</li>
-            </div>
+                <li className='nav-item'>
+                    <a className='nav-link'>{folder.name}</a>
+                </li>
+            </div> 
         ));
 
         return (
-            <div className='sidebar-sticky'>
-                <a href="#" className="btn btn-primary">upload</a>
+            <>
+                <label className='custom-file-upload'>
+                    <input type="file" onChange={this.onUpload} />
+                    Upload
+                </label>
+
                 <ul className='nav flex-column'>
                     {rend_folder}
                 </ul>
-            </div>
+            </>
         );
     }
 }

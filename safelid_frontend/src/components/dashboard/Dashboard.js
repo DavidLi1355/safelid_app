@@ -24,20 +24,15 @@ class Dashboard extends Component {
             this.props.history.push('/login');
         }
     }
-    
-    logout = e => {
-        e.preventDefault();
-        this.props.logoutUser();
-    }
 
     render() {
         return (
             <>
                 <DashboardNavBar />
-                <div className='container-fluid'>
-                    <div className='row'>
-                        <div className='col-sm-3 sidebar sticky-sidebar'><ItemSidebar /></div>
-                        <div className='col-sm-9'><ItemContainer /></div>
+                <div className='container-fluid d-flex flex-column overflow-hidden vh-100'>
+                    <div className='row flex-grow-1 overflow-hidden'>
+                        <div className='col-sm-3 mh-100  py-2'><ItemSidebar /></div>
+                        <div className='col-sm-9 mh-100 '><ItemContainer /></div>
                         
                     </div>
                 </div>

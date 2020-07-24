@@ -11,9 +11,9 @@ class ItemContainer extends Component {
             name: 'home',
             prev_folder: 'home',
             folders: [
-                {id: '1', name: 'private'},
-                {id: '2', name: 'public'},
-                {id: '3', name: 'school'}
+                {id: 'private', name: 'private'},
+                {id: 'public', name: 'public'},
+                {id: 'school', name: 'school'}
             ],
             files: [
                 {id: '1', name: 'card'},
@@ -35,21 +35,31 @@ class ItemContainer extends Component {
 
     render() {
         const rend_files = this.state.files.map((file) => (
-            <div key={file.id}>
-                <div className="card">
+            <div className='col-sm-12 col-md-4 p-2'>
+                <div className="card" key={file.id}>
                     <img className="card-img-top" alt="Card image cap" />
                     <div className="card-body">
-                        <h5 className="card-title">{file.name}</h5>
-                        <a href="#" className="btn btn-primary">Go somewhere</a>
+                        <h4 className="card-title">{file.name}</h4>
+                        {/* <a href="#" className="btn btn-primary">Go somewhere</a> */}
                     </div>
                 </div>
             </div>
+            
         ));
         
         return (
-            <div>
-                {rend_files}
-            </div>
+            <>
+                <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item"><a href="#">Back</a></li>
+                    </ol>
+                </nav>
+                {/* <div className='container-fluid'> */}
+                    <div className='row flex-grow-1 '>
+                        {rend_files}
+                    </div>
+                {/* </div>   */}
+            </>
         );
     }
 }
