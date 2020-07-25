@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './Upload.css';
 
+import {uploadFile} from '../../actions/dashboardActions';
+
 class ItemSidebar extends Component {
     constructor() {
         super();
@@ -18,7 +20,11 @@ class ItemSidebar extends Component {
     }
 
     onUpload = e => {
-        console.log(e.target.files[1]);
+        var data = new FormData();
+        console.log(e.target.files[0]);
+        data.append('file', e.target.files[0]);
+        console.log(data);
+        this.props.uploadFile(data);
     }
 
 
@@ -55,5 +61,6 @@ const mapStateToProps = state => ({
 });
 
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    {uploadFile}
 )(ItemSidebar);

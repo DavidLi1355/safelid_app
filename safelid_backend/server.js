@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const config = require('config');
 const cors = require('cors');
-const fs = require('fs');
+// const fs = require('fs');
 
 const app = express();
 const port = 5000;
@@ -16,7 +16,7 @@ const connection = mongoose.connection;
 
 connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
-    const bucket = new mongoose.mongo.GridFSBucket(connection.db, { bucketName: 'files' });
+    // const bucket = new mongoose.mongo.GridFSBucket(connection.db, { bucketName: 'files' });
 })
 
 app.listen(port, () => {
@@ -28,3 +28,4 @@ app.listen(port, () => {
 // Routes
 app.use('/', require('./routes/users'));
 app.use('/', require('./routes/dashboard'));
+app.use('/dashboard', require('./routes/dashboard'));

@@ -6,17 +6,17 @@ const FolderSchema = new mongoose.Schema({
         required: true
     },
     user_id: {
-        type: objectId,
+        type: mongoose.Schema.ObjectId,
         required: true
     },
     prev_folder_id: {
-        type: objectId,
+        type: mongoose.Schema.ObjectId
     },
     folder_ids: {
-        type: array
+        type: [mongoose.Schema.ObjectId]
     },
     file_ids: {
-        type: array
+        type: [mongoose.Schema.ObjectId]
     }
 });
 

@@ -6,15 +6,15 @@ const FileSchema = new mongoose.Schema({
         required: true
     },
     user_id: {
-        type: objectId,
+        type: mongoose.Schema.ObjectId,
         required: true
     },
     folder_id: {
-        type: objectId,
+        type: mongoose.Schema.ObjectId,
         required: true
     },
     data: {
-        type: binData,
+        type: Buffer,
         required: true
     }
 });

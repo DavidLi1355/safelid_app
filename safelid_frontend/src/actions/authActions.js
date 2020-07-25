@@ -2,7 +2,6 @@ import axios from 'axios';
 
 import { 
     USER_LOADING, 
-    USER_LOADED,
     REGISTER_SUCCESS,
     REGISTER_FAIL,
     LOGIN_SUCCESS,
@@ -23,7 +22,6 @@ export const registerUser = (userData, history) => dispatch => {
     axios.post('http://localhost:5000/register', userData, config)
         .then(res => {
             history.push('/login');
-            dispatch(setCurrentUser(res.data));
         })
         .catch(err => {
             dispatch(getErrors(err.response.data));

@@ -1,6 +1,5 @@
 import { 
     USER_LOADING, 
-    USER_LOADED,
     REGISTER_SUCCESS,
     REGISTER_FAIL,
     LOGIN_SUCCESS,
@@ -8,15 +7,14 @@ import {
     LOGOUT_SUCCESS,
     SET_CURRENT_USER,
     AUTH_ERROR
-} from "../actions/types";
+} from "../../actions/types";
 
 
 const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: false,
     isLoading: false,
-    user: null,
-    isRegister: false
+    user: null
 };
 
 export default function(state = initialState, action) {
@@ -25,15 +23,9 @@ export default function(state = initialState, action) {
             localStorage.setItem('token', action.payload.token);
             return {
                 ...state,
+                token: action.payload.token,
                 user: action.payload
             }
-        case USER_LOADED:
-            return {
-                ...state,
-                isAuthenticated: true,
-                isLoading: false,
-                user: action.payload
-            };
         case USER_LOADING:
             return {
                 ...state,
