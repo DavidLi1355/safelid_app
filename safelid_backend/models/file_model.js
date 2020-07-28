@@ -9,7 +9,7 @@ const FileSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         required: true
     },
-    folder_id: {
+    parent_folder_id: {
         type: mongoose.Schema.ObjectId,
         required: true
     },

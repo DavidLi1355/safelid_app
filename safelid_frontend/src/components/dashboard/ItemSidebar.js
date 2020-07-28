@@ -21,9 +21,7 @@ class ItemSidebar extends Component {
 
     onUpload = e => {
         var data = new FormData();
-        console.log(e.target.files[0]);
         data.append('file', e.target.files[0]);
-        console.log(data);
         this.props.uploadFile(data);
     }
 
