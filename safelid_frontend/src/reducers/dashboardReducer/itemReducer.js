@@ -2,6 +2,24 @@
 
 
 const initialState = {
+    current_folder: {
+        id: 'abc',
+        name: 'home'
+    },
+    prev_folder: {
+        id: 'abc',
+        name: 'home'
+    },
+    folders: [
+        {id: '1', name: 'private'},
+        {id: '2', name: 'public'},
+        {id: '3', name: 'school'}
+    ],
+    files: [
+        {id: '1', name: 'private'},
+        {id: '2', name: 'public'},
+        {id: '3', name: 'school'}
+    ]
     // files: 
 };
 

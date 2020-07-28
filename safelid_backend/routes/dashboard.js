@@ -25,10 +25,15 @@ connection.once('open', () => {
 const storage = new GridFsStorage({
     url: config.get('ATLAS_URI'),
     file: (req, file) => {
+        console.log(req);
         return {
             bucketName: 'files',
             filename: file.originalname,
-            disableMD5: true
+            disableMD5: true,
+            // metadata: {
+            //     parent_folder_id: req.body.folder,
+            //     user_id: req.body.user.id
+            // }
         }
     }
 });

@@ -9,8 +9,14 @@ class ItemSidebar extends Component {
     constructor() {
         super();
         this.state = {
-            name: 'home',
-            prev_folder: 'home',
+            current_folder: {
+                id: 'abc',
+                name: 'home'
+            },
+            prev_folder: {
+                id: 'abc',
+                name: 'home'
+            },
             folders: [
                 {id: '1', name: 'private'},
                 {id: '2', name: 'public'},
@@ -22,7 +28,14 @@ class ItemSidebar extends Component {
     onUpload = e => {
         var data = new FormData();
         data.append('file', e.target.files[0]);
-        this.props.uploadFile(data);
+        
+        // const temp = {
+        //     data: data,
+        //     folder: this.state.current_folder.id
+        // }
+
+        // data.append('folder', this.state.current_folder.id);
+        this.props.uploadFile(temp);
     }
 
 
