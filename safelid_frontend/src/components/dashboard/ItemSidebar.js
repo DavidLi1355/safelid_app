@@ -10,7 +10,7 @@ class ItemSidebar extends Component {
         super();
         this.state = {
             current_folder: {
-                id: 'abc',
+                id: '5f1f20ab7c884941e46b6836',
                 name: 'home'
             },
             prev_folder: {
@@ -28,14 +28,11 @@ class ItemSidebar extends Component {
     onUpload = e => {
         var data = new FormData();
         data.append('file', e.target.files[0]);
-        
-        // const temp = {
-        //     data: data,
-        //     folder: this.state.current_folder.id
-        // }
-
-        // data.append('folder', this.state.current_folder.id);
-        this.props.uploadFile(temp);
+        data.append('name', 'test');
+        data.append('user_id', this.props.auth.user.id)
+        data.append('parent_folder_id', this.state.current_folder.id);
+        e.target.value = null;
+        this.props.uploadFile(data);
     }
 
 
@@ -50,7 +47,7 @@ class ItemSidebar extends Component {
 
         return (
             <>
-                <label className='custom-file-upload'>
+                <label className='custom-file-upload' enctype='multipart/form-data'>
                     <input type="file" onChange={this.onUpload} />
                     Upload
                 </label>
@@ -64,11 +61,11 @@ class ItemSidebar extends Component {
 }
 
 ItemSidebar.propTypes = {
-
+    auth: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-
+    auth: state.auth
 });
 
 export default connect(

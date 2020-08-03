@@ -1,92 +1,72 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
+const util = require('util')
 
 const User = require('../models/user_model');
 const Folder = require('../models/folder_model');
 const File = require('../models/file_model');
 const auth = require('../middleware/auth');
 
-
-const multer = require('multer');
-const GridFsStorage = require('multer-gridfs-storage');
-const Grid = require('gridfs-stream');
-
-
+const Busboy = require('busboy');
 const config = require('config');
 const uri = config.get('ATLAS_URI');
 const connection = mongoose.createConnection(uri, {useNewUrlParser: true, useUnifiedTopology: true});
-
-let gfs;
-connection.once('open', () => {
-    gfs = Grid(connection.db, mongoose.mongo);
-    gfs.collection('files');
-})
-
-const storage = new GridFsStorage({
-    url: config.get('ATLAS_URI'),
-    file: (req, file) => {
-        console.log(req);
-        return {
-            bucketName: 'files',
-            filename: file.originalname,
-            disableMD5: true,
-            // metadata: {
-            //     parent_folder_id: req.body.folder,
-            //     user_id: req.body.user.id
-            // }
-        }
-    }
-});
-
-const upload = multer({ storage: storage });
-
 
 
 // @route GET /dashboard
 // @desc Register new user
 // @access Private
-router.get('/folder/:folderId', auth, (req, res) => {
+router.get('/folder/:FolderId', auth, (req, res) => {
+
+
     res.status(200).json({ dashboard: "Dashboard" });
 });
 
-router.get('/file/:folderId', auth, (req, res) => {
+router.get('/file/:FileId', auth, (req, res) => {
     res.status(200).json({ dashboard: "Dashboard" });
 });
 
-router.post('/upload', auth, upload.single('file'), (req, res) => {
-    
-    res.json({ file: req.file });
+//upload.single('file')
+router.post('/upload', auth, (req, res) => {
+    const bucket = new mongoose.mongo.GridFSBucket(connection.db, { bucketName: 'storages', chunkSizeBytes: 1048576 });
+    let busboy = new Busboy({headers: req.headers});
 
+    let uploadStreamFilename;
+    let metadata = {};
+    let buffer = Buffer.alloc(0);
 
-    // const img = fs.readFileSync()
-    // const encode_image = img
-    // console.log(req.files.filename.name);
+    busboy.on('file', (fieldname, file, filename) => {
+        // We are streaming! Handle chunks
+        uploadStreamFilename = filename;
+        file.on('data', data => {
+            // Here we can act on the data chunks streamed.
+            buffer = Buffer.concat([buffer, data]);
+        });
+        // Completed streaming the file.
+        // file.on('end', () => {
 
-
-    // const user_id = mongoose.Types.ObjectId(req.body.user_id);
-    // const parent_folder_id = (req.body.parent_folder_id == null) ? null : mongoose.Types.ObjectId(req.body.parent_folder_id);
-    // const newFile = new File({
-    //     name: req.body.name,
-    //     user_id: user_id,
-    //     parent_folder_id: parent_folder_id,
-    //     data: req.body.data
-    // });
-
-    // newFile.save()
-    //     .then(file => res.json({
-    //         file: {
-    //             id: file.id,
-    //             name: file.name,
-    //             user_id: file.user_id,
-    //             parent_folder_id: file.parent_folder_id,
-    //             data: file.data
-    //         }
-    //     }))
-    //     .catch(err => console.log(err));
-
+        // });
+    });
+    busboy.on('field', (fieldname, val) => {
+        metadata[fieldname] = val;
+    });
+    busboy.on('finish', () => {
+        metadata['user_id'] = mongoose.Types.ObjectId(metadata['user_id']);
+        metadata['parent_folder_id'] = mongoose.Types.ObjectId(metadata['parent_folder_id']);
+        const uploadStream = bucket.openUploadStream(uploadStreamFilename, {metadata});
+        uploadStream.end(buffer, (error, result) => {
+            if (error) {
+                return res.status(400)
+                    .json({ error: 'Fail to upload file' });
+            }
+            console.log(result);
+        });
+        res.sendStatus(200);
+    });
+    req.pipe(busboy);
 });
 
-router.post('/addFolder', (req, res) => {
+router.post('/addFolder', auth, (req, res) => {
     const user_id = mongoose.Types.ObjectId(req.body.user_id);
     const parent_folder_id = (req.body.parent_folder_id == null) ? null : mongoose.Types.ObjectId(req.body.parent_folder_id);
     const folder_ids = req.body.folder_ids.map(s => mongoose.Types.ObjectId(s));
