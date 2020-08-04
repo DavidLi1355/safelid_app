@@ -1,17 +1,46 @@
 import axios from 'axios';
 
+import { 
+    GET_FOLDER_CONTENT
+} from './types';
+
+export const toHomeFolder = history => (dispatch, getState) => {
+    const token = getState().auth.token;
+    const config = {
+        headers: {}
+    };
+    if (token) {
+        config.headers['x-auth-token'] = token;
+    }
+    axios.get('http://localhost:5000/dashboard/homefolder', config)
+        .then(res => {
+            history.push('/dashboard/folder/' + res.data.id);
+        })
+        .catch();
+}
+
+export const getFolderContent = () => (dispatch, getState) => {
+    const token = getState().auth.token;
+    const config = {
+        headers: {}
+    };
+    if (token) {
+        config.headers['x-auth-token'] = token;
+    }
+    const url = window.location.href
+    console.log(url);
+    axios.get(url, config)
+        .then(res => {
+            console.log(res.data);
+            dispatch({
+                type: GET_FOLDER_CONTENT,
+                payload: res.data
+            })
+        })
+        .catch();
+} 
 
 export const uploadFile = data => (dispatch, getState) => {
-    // const token = getState().auth.token;
-    // const config = {
-    //     headers: {
-    //         "Content-type": "application/json"
-    //     }
-    // }
-    // if (token) {
-    //     config.headers['x-auth-token'] = token;
-    // }
-
     const token = getState().auth.token;
     const config = {
         headers: {
@@ -28,22 +57,8 @@ export const uploadFile = data => (dispatch, getState) => {
         .then(res => {
             console.log('success');
         })
-        .catch();
+        .catch(err => {
+            console.log('error');
+        });
 
-    // console.log(imageData);
-
-    // const file = {
-    //     name: 'test',
-    //     user_id: '5f18fb2f1fd86a58d0405736',
-    //     parent_folder_id: '5f1f20ab7c884941e46b6836',
-    //     data: imageData
-    // }
-    
-    // axios.post('http://localhost:5000/dashboard/upload', file)
-    //     .then(res => {
-    //         console.log(res);
-    //     })
-    //     .catch(err => {
-    //         console.log('error');
-    //     });
 }

@@ -54,11 +54,11 @@ class ItemContainer extends Component {
                         <li className="breadcrumb-item"><a href="#">Back</a></li>
                     </ol>
                 </nav>
-                {/* <div className='container-fluid'> */}
+                <div className='container-fluid'>
                     <div className='row flex-grow-1 '>
                         {rend_files}
                     </div>
-                {/* </div>   */}
+                </div>  
             </>
         );
     }

@@ -16,7 +16,6 @@ const connection = mongoose.connection;
 
 connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
-    // const bucket = new mongoose.mongo.GridFSBucket(connection.db, { bucketName: 'files' });
 })
 
 app.listen(port, () => {

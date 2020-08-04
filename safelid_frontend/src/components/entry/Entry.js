@@ -6,6 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import EntryNavBar from './EntryNavBar';
 import Login from './Login';
 import Register from './Register';
+import { loadUser } from '../../actions/authActions';
+import { toHomeFolder } from '../../actions/dashboardActions';
 
 class Entry extends Component {
     componentDidMount() {
@@ -20,7 +22,7 @@ class Entry extends Component {
 
     redirectToDashboard = () => {
         if (this.props.auth.isAuthenticated) {
-            this.props.history.push('/dashboard');
+            this.props.toHomeFolder(this.props.history);
         }
     }
 
@@ -39,8 +41,7 @@ class Entry extends Component {
 
 Entry.propTypes = {
     auth: PropTypes.object.isRequired,
-    error: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    error: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
@@ -51,5 +52,9 @@ const mapStateToProps = state => ({
 // export default withRouter(Entry);
 
 export default connect(
-    mapStateToProps
+    mapStateToProps,
+    {
+        loadUser,
+        toHomeFolder
+    }
 )(Entry);

@@ -1,4 +1,6 @@
-
+import { 
+    GET_FOLDER_CONTENT
+} from "../../actions/types";
 
 
 const initialState = {
@@ -10,22 +12,18 @@ const initialState = {
         id: 'abc',
         name: 'home'
     },
-    folders: [
-        {id: '1', name: 'private'},
-        {id: '2', name: 'public'},
-        {id: '3', name: 'school'}
-    ],
-    files: [
-        {id: '1', name: 'private'},
-        {id: '2', name: 'public'},
-        {id: '3', name: 'school'}
-    ]
-    // files: 
+    folders: null,
+    files: null
 };
 
 export default function(state = initialState, action) {
     switch (action.type) {
-        
+        case GET_FOLDER_CONTENT:
+            return {
+                ...state,
+                folders: action.payload.folders,
+                files: action.payload.files
+            }
         default:
             return state;
     }
