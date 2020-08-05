@@ -11,13 +11,13 @@ const FolderSchema = new mongoose.Schema({
     },
     parent_folder_id: {
         type: mongoose.Schema.ObjectId
-    },
-    folder_ids: {
-        type: [mongoose.Schema.ObjectId]
-    },
-    file_ids: {
-        type: [mongoose.Schema.ObjectId]
     }
+    // folder_ids: {
+    //     type: [mongoose.Schema.ObjectId]
+    // },
+    // file_ids: {
+    //     type: [mongoose.Schema.ObjectId]
+    // }
 });
 
 const Folder = mongoose.model('folders', FolderSchema);

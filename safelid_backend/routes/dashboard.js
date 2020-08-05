@@ -43,7 +43,7 @@ router.get('/folder/:FolderID', auth, (req, res) => {
                     reject({'error': 'user unauthorized for this folder'});
                 } 
                 else {
-                    resolve();
+                    resolve(folder);
                 }
             })
     });
@@ -64,14 +64,14 @@ router.get('/folder/:FolderID', auth, (req, res) => {
 
     Promise.all([folderQuery, fileQuery, checkAuth])
         .then(results => {
-            res.send({'folders': results[0], 'files': results[1]});
+            res.send({'folders': results[0], 'files': results[1], 'current_folder': results[2]});
         })
         .catch(err => {
             res.status(403).send(err)
         })
 });
 
-router.get('/file/:FileID', auth, (req, res) => {
+router.get('/file/:FileID', (req, res) => {
     current_file = mongoose.Types.ObjectId(req.params.FileID);
     const downloadStream = bucket.openDownloadStream(current_file);
     downloadStream.pipe(res);
@@ -117,17 +117,17 @@ router.post('/upload', auth, (req, res) => {
 });
 
 
-router.post('/addFolder', (req, res) => {
-    const user_id = mongoose.Types.ObjectId(req.body.user_id);
+router.post('/createFolder', auth, (req, res) => {
+    const user_id = mongoose.Types.ObjectId(req.user.id);
     const parent_folder_id = (req.body.parent_folder_id == null) ? null : mongoose.Types.ObjectId(req.body.parent_folder_id);
-    const folder_ids = req.body.folder_ids.map(s => mongoose.Types.ObjectId(s));
-    const file_ids = req.body.file_ids.map(s => mongoose.Types.ObjectId(s));
+    // const folder_ids = req.body.folder_ids.map(s => mongoose.Types.ObjectId(s));
+    // const file_ids = req.body.file_ids.map(s => mongoose.Types.ObjectId(s));
     const newFolder = new Folder({
         name: req.body.name,
         user_id: user_id,
         parent_folder_id: parent_folder_id,
-        folder_ids: folder_ids,
-        file_ids: file_ids
+        // folder_ids: folder_ids,
+        // file_ids: file_ids
     });
 
     newFolder.save()
@@ -137,8 +137,8 @@ router.post('/addFolder', (req, res) => {
                 name: folder.name,
                 user_id: folder.user_id,
                 parent_folder_id: folder.parent_folder_id,
-                folder_ids: folder.folder_ids,
-                file_ids: folder.file_ids
+                // folder_ids: folder.folder_ids,
+                // file_ids: folder.file_ids
             }
         }))
         .catch(err => console.log(err));

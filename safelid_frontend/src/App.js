@@ -19,12 +19,6 @@ class App extends Component {
     // this.redirectToLogin();
   }
 
-  // redirectToLogin = () => {
-  //   if (!this.props.auth.isAuthenticated && !this.props.auth.isLoading) {
-  //       this.props.history.push('/login');
-  //   }
-  // }
-
   render() {
     return (
       <Provider store={store}>
@@ -38,25 +32,5 @@ class App extends Component {
     );
   }  
 }
-
-// Dashboard.propTypes = {
-//   auth: PropTypes.object.isRequired,
-//   item: PropTypes.object.isRequired
-// }
-
-// const mapStateToProps = state => ({
-//   auth: state.auth,
-//   item: state.item
-// });
-
-// export default connect(
-//   mapStateToProps,
-//   {
-//       logoutUser, 
-//       toHomeFolder,
-//       getFolderContent,
-//       loadUser
-//   }
-// )(Dashboard);
 
 export default App;

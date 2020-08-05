@@ -10,3 +10,4 @@ export const CLEAR_ERRORS = "CLEAR_ERRORS";
 
 
 export const GET_FOLDER_CONTENT = "GET_FOLDER_CONTENT";
+export const CLEAR_ITEM = "CLEAR_ITEM";

@@ -38,7 +38,7 @@ class Login extends Component {
                     <h5 className="card-title text-center">Login</h5>
                     <form noValidate onSubmit={this.onSubmit}>
                         <div>
-                            <label htmlFor="email">Email address</label>
+                            <label htmlFor="email">Email or Username</label>
                             <input 
                                 onChange={this.onChange} 
                                 type="email" 
@@ -73,8 +73,7 @@ class Login extends Component {
 
 Login.propTypes = {
     auth: PropTypes.object.isRequired,
-    error: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired
+    error: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({

@@ -3,53 +3,54 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './Upload.css';
 
-import {uploadFile} from '../../actions/dashboardActions';
+import { uploadFile, createFolder } from '../../actions/dashboardActions';
 
 class ItemSidebar extends Component {
-    constructor() {
-        super();
-        this.state = {
-            current_folder: {
-                id: '5f1f20ab7c884941e46b6836',
-                name: 'home'
-            },
-            prev_folder: {
-                id: 'abc',
-                name: 'home'
-            },
-            folders: [
-                {id: '1', name: 'private'},
-                {id: '2', name: 'public'},
-                {id: '3', name: 'school'}
-            ]
-        };
-    }
-
     onUpload = e => {
         var data = new FormData();
         data.append('file', e.target.files[0]);
-        data.append('name', 'test');
         data.append('user_id', this.props.auth.user.id)
-        data.append('parent_folder_id', this.state.current_folder.id);
+        data.append('parent_folder_id', this.props.item.current_folder._id);
         e.target.value = null;
         this.props.uploadFile(data);
     }
 
+    onCreateFolder = e => {
+        var name = 'test';
+        var parent_folder_id = this.props.item.current_folder._id;
+        var data = {
+            'parent_folder_id': parent_folder_id,
+            'name': name
+        }
+        this.props.createFolder(data);
+    }
 
     render() {
-        const rend_folder = this.state.folders.map((folder) => (
-            <div key={folder.id}>
-                <li className='nav-item'>
-                    <a className='nav-link'>{folder.name}</a>
-                </li>
-            </div> 
-        ));
-
+        // this.props.getFolderContent();
+        const { folders } = this.props.item
+        var rend_folder
+        if (folders != null) {
+            rend_folder = folders.map((folder) => (
+                <div key={folder._id + 'folder'}>
+                    <li className='nav-item'>
+                        <a className='nav-link'>{folder.name}</a>
+                    </li>
+                </div> 
+            ));
+        }
+        else {
+            rend_folder = (<div></div>)
+        }
+        
         return (
             <>
                 <label className='custom-file-upload' enctype='multipart/form-data'>
                     <input type="file" onChange={this.onUpload} />
-                    Upload
+                    Upload File
+                </label>
+                <label className='custom-file-upload' enctype='multipart/form-data'>
+                    <input type="file" onChange={this.onUpload} />
+                    New Folder
                 </label>
 
                 <ul className='nav flex-column'>
@@ -61,14 +62,18 @@ class ItemSidebar extends Component {
 }
 
 ItemSidebar.propTypes = {
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
+    item: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    item: state.item
 });
 
 export default connect(
     mapStateToProps,
-    {uploadFile}
+    {
+        uploadFile
+    }
 )(ItemSidebar);
