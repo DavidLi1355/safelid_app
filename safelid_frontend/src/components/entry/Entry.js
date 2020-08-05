@@ -12,7 +12,10 @@ import { toHomeFolder } from '../../actions/dashboardActions';
 class Entry extends Component {
     componentDidMount() {
         console.log('Entry componentDidMount');
-        this.redirectToDashboard();
+        this.props.loadUser()
+            .then(() => {
+                this.redirectToDashboard();
+            });
     }
 
     componentDidUpdate() {
