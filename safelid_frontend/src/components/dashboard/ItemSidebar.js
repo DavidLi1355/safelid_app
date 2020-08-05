@@ -2,10 +2,20 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './Upload.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Modal, Button} from 'react-bootstrap/'
 
 import { uploadFile, createFolder } from '../../actions/dashboardActions';
 
 class ItemSidebar extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            modalShow: false,
+            folderName: ''
+        };
+    }
+
     onUpload = e => {
         var data = new FormData();
         data.append('file', e.target.files[0]);
@@ -14,6 +24,10 @@ class ItemSidebar extends Component {
         e.target.value = null;
         this.props.uploadFile(data);
     }
+
+    onChange = e => {
+        this.setState({ [e.target.id]: e.target.value });
+    };
 
     onCreateFolder = e => {
         var name = 'test';
@@ -24,6 +38,21 @@ class ItemSidebar extends Component {
         }
         this.props.createFolder(data);
     }
+    
+    createFolderToggle = () => {
+        this.setState({modalShow: !this.state.modalShow});
+        if (!this.state.modalShow) {
+            console.log('clearing foldername')
+            this.setState({folderName: ''});
+        }
+    }
+
+    createFolderSubmit = () => {
+        console.log(this.state.folderName);
+        this.createFolderToggle();
+    }
+
+
 
     render() {
         // this.props.getFolderContent();
@@ -48,10 +77,24 @@ class ItemSidebar extends Component {
                     <input type="file" onChange={this.onUpload} />
                     Upload File
                 </label>
-                <label className='custom-file-upload' enctype='multipart/form-data'>
-                    <input type="file" onChange={this.onUpload} />
+
+                <Button variant="primary" onClick={this.createFolderToggle}>
                     New Folder
-                </label>
+                </Button>
+                <Modal show={this.state.modalShow} onHide={this.createFolderToggle} size='sm' centered>
+                    <Modal.Body>
+                        <form>
+                            <div className="form-group">
+                                <label>New Folder</label>
+                                <input type="text" className="form-control" id="folderName" onChange={this.onChange} onSubmit={this.createFolderSubmit} />
+                            </div>
+                        </form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.createFolderToggle} variant="outline-secondary">Close</Button>
+                        <Button onClick={this.createFolderSubmit} variant="outline-primary">Create</Button>
+                    </Modal.Footer>
+                </Modal>
 
                 <ul className='nav flex-column'>
                     {rend_folder}

@@ -70,7 +70,6 @@ export const loadUser = () => (dispatch, getState) => new Promise((resolve, rejc
                 type: LOGIN_SUCCESS
             });
             dispatch(setCurrentUser(res.data));
-            console.log('login success')
         })
         .catch(err => {
             dispatch(getErrors(err.response.data));
@@ -79,7 +78,6 @@ export const loadUser = () => (dispatch, getState) => new Promise((resolve, rejc
             });
         })
         .finally(() => {
-            console.log('finished authenticating')
             resolve();
         });  
 })

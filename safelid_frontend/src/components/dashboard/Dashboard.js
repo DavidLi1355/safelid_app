@@ -25,9 +25,6 @@ class Dashboard extends Component {
 
     componentDidUpdate() {
         console.log('Dashboard componentDidUpdate');
-        // if (!this.props.auth.isAuthenticated) {
-        //     this.props.history.push('/login');
-        // }
     }
 
     render() {

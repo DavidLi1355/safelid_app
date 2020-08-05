@@ -106,7 +106,7 @@ router.post('/login', (req, res) => {
                 jwt.sign(
                     payload,
                     config.get('JWT_SECRET'), 
-                    { expiresIn: 30 }, // 900 = 15 mins 
+                    { expiresIn: 1200 }, // 900 = 15 mins 
                     (err, token) => {
                         if (err) throw err;
                         res.json({
