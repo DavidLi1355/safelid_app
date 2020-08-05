@@ -18,6 +18,7 @@ class DashboardNavBar extends Component {
     logout = e => {
         e.preventDefault();
         this.props.logoutUser();
+        this.props.history.push('/login');
     }
 
     render() {

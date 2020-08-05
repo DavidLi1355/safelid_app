@@ -51,7 +51,7 @@ export const logoutUser = () => dispatch => {
     });
 }
 
-export const loadUser = () => (dispatch, getState) => {
+export const loadUser = () => (dispatch, getState) => new Promise((resolve, rejct) => {
     dispatch(userLoading());
 
     const token = getState().auth.token;
@@ -69,16 +69,20 @@ export const loadUser = () => (dispatch, getState) => {
             dispatch({
                 type: LOGIN_SUCCESS
             });
-            dispatch(setCurrentUser(res.data))
+            dispatch(setCurrentUser(res.data));
+            console.log('login success')
         })
         .catch(err => {
             dispatch(getErrors(err.response.data));
             dispatch({
                 type: AUTH_ERROR
             });
-        }
-    );
-}
+        })
+        .finally(() => {
+            console.log('finished authenticating')
+            resolve();
+        });  
+})
 
 export const userLoading = () => {
     return {

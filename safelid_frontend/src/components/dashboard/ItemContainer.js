@@ -11,11 +11,12 @@ class ItemContainer extends Component {
 
 
     render() {
-        const { files } = this.props.item
+        const { files } = this.props.item;
+        const { history } = this.props;
         var rend_files
         if (files != null) {
             rend_files = files.map((file) => (
-                <File file={file}/>
+                <File file={file} history={history}/>
             ));
         }
         else {

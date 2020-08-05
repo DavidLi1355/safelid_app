@@ -28,6 +28,7 @@ class File extends Component {
     }
 
     cardOnClick = e => {
+        window.open('http://localhost:3000/dashboard/file/' + this.props.file._id)
         console.log('card onclick');
     }
 

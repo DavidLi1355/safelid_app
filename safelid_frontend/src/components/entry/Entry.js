@@ -49,8 +49,6 @@ const mapStateToProps = state => ({
     error: state.error,
 });
 
-// export default withRouter(Entry);
-
 export default connect(
     mapStateToProps,
     {

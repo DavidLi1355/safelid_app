@@ -1,46 +1,46 @@
 import React, { Component } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DashboardNavBar from './DashboardNavBar';
 import ItemSidebar from './ItemSidebar';
 import ItemContainer from './ItemContainer';
-import { logoutUser } from '../../actions/authActions';
+import { loadUser, logoutUser } from '../../actions/authActions';
 import { toHomeFolder, getFolderContent, clearItem } from '../../actions/dashboardActions';
 
 class Dashboard extends Component {
     componentDidMount() {
         console.log('Dashboard componentDidMount');
-        this.redirectToLogin();
-        this.props.getFolderContent();
+        this.props.loadUser()
+            .then(() => {
+                if (!this.props.auth.isAuthenticated) {
+                    this.props.history.push('/login');
+                }
+                else {
+                    this.props.getFolderContent();
+                }
+            });
     }
 
     componentDidUpdate() {
         console.log('Dashboard componentDidUpdate');
-        this.redirectToLogin();        
-    }
-
-    redirectToLogin = () => {
-        if (!this.props.auth.isAuthenticated && !this.props.auth.isLoading) {
-            this.props.clearItem();
-            this.props.history.push('/login');
-        }
+        // if (!this.props.auth.isAuthenticated) {
+        //     this.props.history.push('/login');
+        // }
     }
 
     render() {
         const { history } = this.props;
-        console.log(history)
         return (
             <div>
-                <BrowserRouter>
                 <Switch>
                     <Route path='/dashboard/folder'>
-                        <DashboardNavBar />
+                        <DashboardNavBar history={history}/>
                         <div className='container-fluid d-flex flex-column overflow-hidden vh-100'>
                             <div className='row flex-grow-1 overflow-hidden'>
                                 <div className='col-sm-3 mh-100 py-2'><ItemSidebar /></div>
-                                <div className='col-sm-9 mh-100 '><ItemContainer /></div>
+                                <div className='col-sm-9 mh-100 '><ItemContainer history={history}/></div>
                             </div>
                         </div>
                     </Route>
@@ -48,7 +48,6 @@ class Dashboard extends Component {
                     <Route path='/setting'></Route>
                 </Switch>
 
-                </BrowserRouter>
                 
                 
                 
@@ -70,6 +69,7 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     {
+        loadUser,
         logoutUser, 
         toHomeFolder,
         getFolderContent,
