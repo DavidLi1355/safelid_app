@@ -71,10 +71,34 @@ router.get('/folder/:FolderID', auth, (req, res) => {
         })
 });
 
-router.get('/file/:FileID', (req, res) => {
+router.get('/file/:FileID', auth, (req, res) => {
     current_file = mongoose.Types.ObjectId(req.params.FileID);
     const downloadStream = bucket.openDownloadStream(current_file);
     downloadStream.pipe(res);
+});
+
+router.post('/file/rename/', auth, (req, res) => {
+    current_file = mongoose.Types.ObjectId(req.body.FileID);
+    bucket.rename(current_file, req.body.name, (err) => {
+        if (err) {
+            res.status(400).send(err);
+        }
+        else {
+            res.sendStatus(200);
+        }
+    })
+});
+
+router.post('/file/delete/', auth, (req, res) => {
+    current_file = mongoose.Types.ObjectId(req.body.FileID);
+    bucket.delete(current_file, (err) => {
+        if (err) {
+            res.status(400).send(err);
+        }
+        else {
+            res.sendStatus(200);
+        }
+    });
 });
 
 //upload.single('file')
@@ -109,9 +133,8 @@ router.post('/upload', auth, (req, res) => {
                 return res.status(400)
                     .json({ error: 'Fail to upload file' });
             }
-            console.log(result);
+            res.sendStatus(200);
         });
-        res.sendStatus(200);
     });
     req.pipe(busboy);
 });

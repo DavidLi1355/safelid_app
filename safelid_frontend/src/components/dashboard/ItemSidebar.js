@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import './Upload.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Modal, Button} from 'react-bootstrap/'
+import {Modal, Button} from 'react-bootstrap/';
 
 import { uploadFile, createFolder } from '../../actions/dashboardActions';
 
@@ -26,6 +26,7 @@ class ItemSidebar extends Component {
     }
 
     onChange = e => {
+        e.preventDefault();
         this.setState({ [e.target.id]: e.target.value });
     };
 
@@ -40,22 +41,20 @@ class ItemSidebar extends Component {
     }
     
     createFolderToggle = () => {
-        this.setState({modalShow: !this.state.modalShow});
-        if (!this.state.modalShow) {
-            console.log('clearing foldername')
-            this.setState({folderName: ''});
-        }
+        this.setState({modalShow: !this.state.modalShow}, () => {
+            if (this.state.modalShow) {
+                this.setState({folderName: ''});
+            }
+        });
     }
 
-    createFolderSubmit = () => {
+    createFolderSubmit = e => {
+        e.preventDefault();
         console.log(this.state.folderName);
         this.createFolderToggle();
     }
 
-
-
     render() {
-        // this.props.getFolderContent();
         const { folders } = this.props.item
         var rend_folder
         if (folders != null) {
@@ -73,14 +72,17 @@ class ItemSidebar extends Component {
         
         return (
             <>
-                <label className='custom-file-upload' enctype='multipart/form-data'>
-                    <input type="file" onChange={this.onUpload} />
-                    Upload File
-                </label>
-
+                <Button variant="primary">
+                    <label className='custom-file-upload' enctype='multipart/form-data'>
+                        <input type="file" onChange={this.onUpload} />
+                        Upload File
+                    </label>
+                </Button>
+                
                 <Button variant="primary" onClick={this.createFolderToggle}>
                     New Folder
                 </Button>
+
                 <Modal show={this.state.modalShow} onHide={this.createFolderToggle} size='sm' centered>
                     <Modal.Body>
                         <form>

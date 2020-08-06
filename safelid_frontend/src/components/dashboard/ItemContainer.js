@@ -11,18 +11,24 @@ class ItemContainer extends Component {
 
 
     render() {
+        console.log('itemContainer rendered')
         const { files } = this.props.item;
         const { history } = this.props;
-        var rend_files
+        console.log(rend_files)
+        console.log(files)
+
+        var rend_files = null;
         if (files != null) {
             rend_files = files.map((file) => (
-                <File file={file} history={history}/>
+                <div className='col-sm-12 col-md-4 p-2' key={file._id + 'file'}>
+                    <File file={file} history={history}/>
+                </div> 
+                
             ));
         }
         else {
             rend_files = (<div></div>)
         }
-        
         
         return (
             <>

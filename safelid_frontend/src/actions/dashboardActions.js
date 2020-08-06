@@ -25,7 +25,7 @@ export const getFolderContent = () => (dispatch, getState) => {
     }
 
     const url = window.location.href
-    console.log(url);
+    console.log('getFolderContent');
     axios.get(url, config)
         .then(res => {
             console.log(res.data);
@@ -44,6 +44,37 @@ export const uploadFile = data => (dispatch, getState) => {
     }
 
     axios.post('http://localhost:5000/dashboard/upload', data, config)
+        .then(res => {
+            dispatch(getFolderContent());
+        })
+        .catch(err => {
+            console.log('error');
+        });
+}
+
+export const renameFile = data => (dispatch, getState) => {
+    const config = { headers: {} };
+    if (getState().auth.token) {
+        config.headers['x-auth-token'] = getState().auth.token;
+    }
+
+    axios.post('http://localhost:5000/dashboard/file/rename', data, config)
+        .then(res => {
+            console.log('renamed')
+            dispatch(getFolderContent());
+        })
+        .catch(err => {
+            console.log('error');
+        });
+}
+
+export const deleteFile = data => (dispatch, getState) => {
+    const config = { headers: {} };
+    if (getState().auth.token) {
+        config.headers['x-auth-token'] = getState().auth.token;
+    }
+
+    axios.post('http://localhost:5000/dashboard/file/delete', data, config)
         .then(res => {
             dispatch(getFolderContent());
         })
