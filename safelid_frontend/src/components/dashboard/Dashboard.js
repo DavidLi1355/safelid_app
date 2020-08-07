@@ -34,8 +34,8 @@ class Dashboard extends Component {
                 <Switch>
                     <Route path='/dashboard/folder'>
                         <DashboardNavBar history={history}/>
-                        <div className='container-fluid d-flex flex-column overflow-hidden vh-100'>
-                            <div className='row flex-grow-1 overflow-hidden'>
+                        <div className='container-fluid d-flex flex-column vh-100'>
+                            <div className='row flex-grow-1'>
                                 <div className='col-sm-3 col-md-2 mh-100 py-2'><ItemSidebar /></div>
                                 <div className='col-sm-9 col-md-10 mh-100 '><ItemContainer history={history}/></div>
                             </div>

@@ -149,6 +149,12 @@ class File extends Component {
                 );
         }
     }
+    
+
+    onNotImg = (e) => {
+        e.target.src = require('./file_notimg.jpg');
+    }
+    
 
     render() {
         const buttonStyle = {
@@ -160,7 +166,7 @@ class File extends Component {
                 <>
                     <div className="card h-100">
                         <div class="embed-responsive embed-responsive-4by3">
-                            <img className="card-img-top embed-responsive-item" src={this.state.file} />
+                            <img className="card-img-top embed-responsive-item" src={this.state.file} onError={this.onNotImg}/>
                         </div>
                             
                         <div className="card-body d-flex flex-column">
