@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
@@ -7,6 +8,7 @@ const isEmpty = require('is-empty');
 const auth = require('../middleware/auth');
 
 const User = require('../models/user_model');
+const Folder = require('../models/folder_model');
 
 // Load input validation
 const validateRegisterInput = require("../validation/register");
@@ -29,6 +31,7 @@ router.post('/register', (req, res) => {
 
     User.find({$or: [{email: emailLower},{username: usernameLower}]}).then(users => {
         let dupErrors = {};
+        console.log(users)
         users.forEach((user) => {
             if (user.email === emailLower) {
                 dupErrors.email = "Email already exists";
@@ -52,14 +55,29 @@ router.post('/register', (req, res) => {
                     if (err) throw err;
                     newUser.password = hash;
                     newUser.save()
-                        .then(user => res.json({
-                            user: {
-                                id: user.id,
-                                name: user.name,
-                                email: user.email,
-                                username: user.username
-                            }
-                        }))
+                        .then(user => {
+                            const newFolder = new Folder({
+                                name: 'home',
+                                user_id: mongoose.Types.ObjectId(user.id),
+                                parent_folder_id: null
+                            });
+                            newFolder.save()
+                                .then(folder => res.json({
+                                    user: {
+                                        id: user.id,
+                                        name: user.name,
+                                        email: user.email,
+                                        username: user.username
+                                    },
+                                    folder: {
+                                        id: folder.id,
+                                        name: folder.name,
+                                        user_id: folder.user_id,
+                                        parent_folder_id: folder.parent_folder_id
+                                    }
+                                }))
+                                .catch(err => console.log(err));
+                        })
                         .catch(err => console.log(err));
                 });
             });
