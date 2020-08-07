@@ -20,7 +20,7 @@ class ItemContainer extends Component {
         var rend_files = null;
         if (files != null) {
             rend_files = files.map((file) => (
-                <div className='col-sm-12 col-md-4 p-2' key={file._id + 'file'}>
+                <div className='col-sm-6 col-md-3 p-2' key={file._id + 'file'} >
                     <File file={file} history={history}/>
                 </div> 
                 

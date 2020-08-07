@@ -36,17 +36,14 @@ class Dashboard extends Component {
                         <DashboardNavBar history={history}/>
                         <div className='container-fluid d-flex flex-column overflow-hidden vh-100'>
                             <div className='row flex-grow-1 overflow-hidden'>
-                                <div className='col-sm-3 mh-100 py-2'><ItemSidebar /></div>
-                                <div className='col-sm-9 mh-100 '><ItemContainer history={history}/></div>
+                                <div className='col-sm-3 col-md-2 mh-100 py-2'><ItemSidebar /></div>
+                                <div className='col-sm-9 col-md-10 mh-100 '><ItemContainer history={history}/></div>
                             </div>
                         </div>
                     </Route>
                     <Route path='/file'></Route>
                     <Route path='/setting'></Route>
                 </Switch>
-
-                
-                
                 
             </div>
         );

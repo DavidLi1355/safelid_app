@@ -40,61 +40,56 @@ class Register extends Component {
         const { error } = this.props;
         
         return (
-            <div className="container row col-11 col-sm-9 col-md-7 col-lg-5 mx-auto">
-                <div className="card card-body card-format">
-                    <h5 className="card-title text-center">Register</h5>
-                    <form noValidate onSubmit={this.onSubmit} className="form-format">
-                        <div>
-                            <label htmlFor="name">Name</label>
-                            <input 
-                                onChange={this.onChange} 
-                                type="text" 
-                                className="form-control" 
-                                id="name" 
-                            />
-                            <span>
-                                {error.name}
-                            </span>
-                        </div>
-                        <div>
-                            <label htmlFor="email">Email Address</label>
-                            <input 
-                                onChange={this.onChange} 
-                                type="email" 
-                                className="form-control" 
-                                id="email"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="username">Username</label>
-                            <input 
-                                onChange={this.onChange} 
-                                type="text" 
-                                className="form-control" 
-                                id="username"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password">Password</label>
-                            <input 
-                                onChange={this.onChange} 
-                                type="password" 
-                                className="form-control" 
-                                id="password"
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="password">Confirm Password</label>
-                            <input 
-                                onChange={this.onChange} 
-                                type="password" 
-                                className="form-control" 
-                                id="confirm_password"
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-primary">Register</button>
-                    </form>
-                </div>
+            <div className="card card-body card-format">
+                <h5 className="card-title text-center">Register</h5>
+                <form noValidate onSubmit={this.onSubmit}>
+                    <div className="card-content">
+                        <label>Name</label>
+                        <input type="text" onChange={this.onChange} id="name" 
+                            className="form-control" 
+                        />
+                        <span>
+                            {error.name}
+                        </span>
+                    </div>
+                    <div className="card-content">
+                        <label>Email Address</label>
+                        <input type="email" onChange={this.onChange} id="email"
+                            className="form-control" 
+                        />
+                        <span>
+
+                        </span>
+                    </div>
+                    <div className="card-content">
+                        <label>Username</label>
+                        <input type="text" onChange={this.onChange} id="username"
+                            className="form-control" 
+                        />
+                        <span>
+                            
+                        </span>
+                    </div>
+                    <div className="card-content">
+                        <label>Password</label>
+                        <input type="password" onChange={this.onChange} id="password"
+                            className="form-control" 
+                        />
+                        <span>
+                            
+                        </span>
+                    </div>
+                    <div className="card-content">
+                        <label>Confirm Password</label>
+                        <input type="password" onChange={this.onChange} id="confirm_password"
+                            className="form-control" 
+                        />
+                        <span>
+                            
+                        </span>
+                    </div>
+                    <button type="submit" className="btn btn-primary mt-3">Register</button>
+                </form>
             </div>
         );
     }

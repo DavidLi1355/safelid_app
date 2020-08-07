@@ -34,8 +34,10 @@ class Entry extends Component {
             <div>
                 <EntryNavBar />
                 <Switch>
-                    <Route path='/login' component={ Login } />
-                    <Route path='/register' component={ Register } />
+                    <div className="container-sm row mx-auto" style={{maxWidth: '500px'}}>
+                        <Route path='/login' component={ Login } />
+                        <Route path='/register' component={ Register } />
+                    </div>
                 </Switch>
             </div>
         );

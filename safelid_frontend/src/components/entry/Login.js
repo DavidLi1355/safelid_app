@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { loginUser } from '../../actions/authActions';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './Form.css';
 
 class Login extends Component {
     constructor() {
@@ -33,39 +34,31 @@ class Login extends Component {
         const { error } = this.props;
 
         return (
-            <div className="container-sm row col-11 col-sm-9 col-md-7 col-lg-5 mx-auto">
-                <div className="card card-body card-format">
-                    <h5 className="card-title text-center">Login</h5>
-                    <form noValidate onSubmit={this.onSubmit}>
-                        <div>
-                            <label htmlFor="email">Email or Username</label>
-                            <input 
-                                onChange={this.onChange} 
-                                type="email" 
-                                className="form-control" 
-                                id="input" 
-                            />
-                            <span>
-                                {error.input}
-                                {error.inputnotfound}
-                            </span>
-                        </div>
-                        <div>
-                            <label htmlFor="password">Password</label>
-                            <input 
-                                onChange={this.onChange} 
-                                type="password" 
-                                className="form-control" 
-                                id="password" 
-                            />
-                            <span>
-                                {error.password}
-                                {error.passwordincorrect}
-                            </span>
-                        </div>
-                        <button type="submit" className="btn btn-primary">Login</button>
-                    </form>
-                </div>
+            <div className="card card-body card-format" >
+                <h5 className="card-title text-center">Login</h5>
+                <form noValidate onSubmit={this.onSubmit} className="">
+                    <div className="card-content">
+                        <label>Email or Username</label>
+                        <input type="text" onChange={this.onChange} id="input" 
+                            className="form-control" 
+                        />
+                        <span>
+                            {error.input}
+                            {error.inputnotfound}
+                        </span>
+                    </div>
+                    <div className="card-content">
+                        <label>Password</label>
+                        <input type="password" onChange={this.onChange} id="password" 
+                            className="form-control" 
+                        />
+                        <span>
+                            {error.password}
+                            {error.passwordincorrect}
+                        </span>
+                    </div>
+                    <button type="submit" className="btn btn-primary mt-3">Login</button>
+                </form>
             </div>
         );
     }

@@ -72,16 +72,16 @@ class ItemSidebar extends Component {
         
         return (
             <>
-                <Button variant="primary">
-                    <label className='custom-file-upload' enctype='multipart/form-data'>
+                <button type="button" class="btn btn-primary btn-sm btn-block">
+                    <label className='custom-file-upload' enctype='multipart/form-data' style={{width:'100%'}}>
                         <input type="file" onChange={this.onUpload} />
                         Upload File
                     </label>
-                </Button>
+                </button>
                 
-                <Button variant="primary" onClick={this.createFolderToggle}>
+                <button type="button" class="btn btn-primary btn-sm btn-block" onClick={this.createFolderToggle}>
                     New Folder
-                </Button>
+                </button>
 
                 <Modal show={this.state.modalShow} onHide={this.createFolderToggle} size='sm' centered>
                     <Modal.Body>

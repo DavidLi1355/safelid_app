@@ -157,14 +157,17 @@ class File extends Component {
         };
         
         return (
-                <div>
+                <>
                     <div className="card h-100">
-                            <img className="card-img-top" src={this.state.file} />
-                            <div className="card-body d-flex flex-column">
-                                <p className="card-text mt-auto">{this.props.file.filename}</p>
-                                    <a className='stretched-link' onClick={this.cardOnClick} />
-                                    <a type='button' className="btn btn-outline-primary" style={buttonStyle} onClick={this.modalToggle}>Option</a>
-                            </div>
+                        <div class="embed-responsive embed-responsive-4by3">
+                            <img className="card-img-top embed-responsive-item" src={this.state.file} />
+                        </div>
+                            
+                        <div className="card-body d-flex flex-column">
+                            <p className="card-text mt-auto">{this.props.file.filename}</p>
+                                <a className='stretched-link' onClick={this.cardOnClick} />
+                                <a type='button' className="btn btn-outline-primary" style={buttonStyle} onClick={this.modalToggle}>Option</a>
+                        </div>
                     </div>
 
                     <Modal show={this.state.modalShow} onHide={this.modalToggle} size='sm' centered>
@@ -175,7 +178,7 @@ class File extends Component {
                             {this.modalFooter()}
                         </Modal.Footer>
                     </Modal>
-                </div>
+                </>
         );
     }
 }
