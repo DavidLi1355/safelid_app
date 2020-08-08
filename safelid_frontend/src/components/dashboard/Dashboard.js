@@ -23,8 +23,11 @@ class Dashboard extends Component {
             });
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps) {
         console.log('Dashboard componentDidUpdate');
+        if (this.props.location.pathname !== prevProps.location.pathname) {
+            this.props.getFolderContent();
+        }
     }
 
     render() {
