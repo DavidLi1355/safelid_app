@@ -19,9 +19,82 @@ connection.once('open', () => {
     console.log("GridFSBucket initiated successfully");
 })
 
+// Helper function 
+checkFolderAuth = (current_user, current_folder) => {
+    return (
+        new Promise((resolve, reject) => {
+            Folder.findById(current_folder)
+                .then(folder => {
+                    if (!current_user.equals(folder.user_id)) {
+                        reject({'error': 'user unauthorized for this folder'});
+                    } 
+                    else {
+                        resolve(folder);
+                    }
+                })
+                .catch(err => {
+                    reject({'error': err});
+                })
+        })
+    );
+}
+
+// checkFileAuth = (current_folder) => {
+//     return (
+//         new Promise((resolve, reject) => {
+//             Folder.findById(current_folder)
+//                 .then(folder => {
+//                     if (!current_user.equals(folder.user_id)) {
+//                         reject({'error': 'user unauthorized for this folder'});
+//                     } 
+//                     else {
+//                         resolve(folder);
+//                     }
+//                 })
+//                 .catch(err => {
+//                     reject({'error': err});
+//                 })
+//         })
+//     );
+// }
+
+folderQuery = (current_folder) => {
+    return (
+        new Promise((resolve, reject) => {
+            Folder.find({parent_folder_id: current_folder})
+                .then(folders => {
+                    console.log(folders)
+                    resolve(folders);
+                })
+                .catch(err => {
+                    console.log('error in folder query')
+                });
+        })
+    );
+}
+
+fileQuery = (current_user, current_folder) => {
+    return (
+        new Promise((resolve, reject) => {
+            File.find({ $and: [{'metadata.user_id': current_user}, {'metadata.parent_folder_id': current_folder}]})
+                .then(files => {
+                    console.log(files)
+                    resolve(files);
+                })
+                .catch(err => {
+                    console.log('error in file query')
+                });
+        })
+    );
+}
+
+
+
+
+
 
 router.get('/homefolder', auth, (req, res) => {
-    current_user = mongoose.Types.ObjectId(req.user.id);
+    const current_user = mongoose.Types.ObjectId(req.user.id);
     Folder.findOne({ $and: [{parent_folder_id: null}, {user_id: current_user}]})
         .then(folder => {
             res.send({'id': folder._id});
@@ -33,37 +106,12 @@ router.get('/homefolder', auth, (req, res) => {
 // @access Private
 // /:FolderId
 router.get('/folder/:FolderID', auth, (req, res) => {
-    current_user = mongoose.Types.ObjectId(req.user.id);
-    current_folder = mongoose.Types.ObjectId(req.params.FolderID);
+    const current_user = mongoose.Types.ObjectId(req.user.id);
+    const current_folder = mongoose.Types.ObjectId(req.params.FolderID);
 
-    let checkAuth = new Promise((resolve, reject) => {
-        Folder.findById(current_folder)
-            .then(folder => {
-                if (!current_user.equals(folder.user_id)) {
-                    reject({'error': 'user unauthorized for this folder'});
-                } 
-                else {
-                    resolve(folder);
-                }
-            })
-    });
-
-    let folderQuery = new Promise((resolve, reject) => {
-        Folder.find({parent_folder_id: current_folder})
-            .then(folders => {
-                resolve(folders);
-            });
-    });
-
-    let fileQuery = new Promise((resolve, reject) => {
-        File.find({ $and: [{'metadata.user_id': current_user}, {'metadata.parent_folder_id': current_folder}]})
-            .then(files => {
-                resolve(files);
-            });
-    });
-
-    Promise.all([folderQuery, fileQuery, checkAuth])
+    Promise.all([folderQuery(current_folder), fileQuery(current_user, current_folder), checkFolderAuth(current_user, current_folder)])
         .then(results => {
+            console.log('success')
             res.send({'folders': results[0], 'files': results[1], 'current_folder': results[2]});
         })
         .catch(err => {
@@ -72,7 +120,7 @@ router.get('/folder/:FolderID', auth, (req, res) => {
 });
 
 router.get('/file/:FileID', auth, (req, res) => {
-    current_file = mongoose.Types.ObjectId(req.params.FileID);
+    const current_file = mongoose.Types.ObjectId(req.params.FileID);
     const downloadStream = bucket.openDownloadStream(current_file);
     downloadStream.pipe(res);
 });
@@ -90,7 +138,7 @@ router.post('/file/rename/', auth, (req, res) => {
 });
 
 router.post('/file/delete/', auth, (req, res) => {
-    current_file = mongoose.Types.ObjectId(req.body.FileID);
+    const current_file = mongoose.Types.ObjectId(req.body.FileID);
     bucket.delete(current_file, (err) => {
         if (err) {
             res.status(400).send(err);
@@ -100,6 +148,74 @@ router.post('/file/delete/', auth, (req, res) => {
         }
     });
 });
+
+router.post('/folder/rename/', auth, (req, res) => {
+    const current_folder = mongoose.Types.ObjectId(req.body.FolderID);
+    Folder.updateOne({_id: current_folder}, {name: req.body.name}, (err) => {
+        if (err) {
+            res.status(400).send(err);
+        }
+        else {
+            res.sendStatus(200);
+        }
+    });
+});
+
+router.post('/folder/delete/', auth, (req, res) => {
+    const current_user = mongoose.Types.ObjectId(req.user.id);
+    const current_folder = req.body.FolderID;
+    console.log('in delete folder api')
+    recursiveDelete(current_user, current_folder);
+    res.sendStatus(200);
+
+    // const current_folder = mongoose.Types.ObjectId(req.body.FolderID);
+    // Folder.deleteOne({_id: current_folder}, (err) => {
+    //     if (err) {
+    //         res.status(400).send(err);
+    //     }
+    //     else {
+    //         res.sendStatus(200);
+    //     }
+    // });
+});
+
+
+
+recursiveDelete = (current_user, current_folder) => {
+    current_folder = mongoose.Types.ObjectId(current_folder);
+
+    Promise.all([folderQuery(current_folder), fileQuery(current_user, current_folder)])
+        .then(results => {
+            const folderFolders = results[0];
+            const folderFiles = results[1];            
+
+            for (var folderNum = 0; folderNum < folderFolders.length; folderNum++) {
+                console.log('before recursive')
+                recursiveDelete(current_user, folderFolders[folderNum]._id)
+            }
+            for (var fileNum = 0; fileNum < folderFiles.length; fileNum++) {
+                const fileID = mongoose.Types.ObjectId(folderFiles[fileNum]._id);
+                const fildData = {
+                    FileID: fileID
+                };
+                console.log('delete file id: ' + fileID);
+                // this.props.deleteFile(data);
+            }
+
+            const folderID = current_folder;
+            const folderData = {
+                FolderID: folderID
+            };
+            console.log('delete folder id: ' + folderID);
+
+            // this.props.deletefolder(data);
+            
+        })
+        .catch(err => {
+            console.log('in error')
+        });
+
+}
 
 //upload.single('file')
 router.post('/upload', auth, (req, res) => {
