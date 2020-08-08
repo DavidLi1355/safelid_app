@@ -3,19 +3,31 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import File from './File';
+import Folder from './Folder';
 
 import { getFolderContent } from '../../actions/dashboardActions';
 
 class ItemContainer extends Component {
 
-
-
     render() {
-        console.log('itemContainer rendered')
-        const { files } = this.props.item;
+        const { files, folders } = this.props.item;
         const { history } = this.props;
         console.log(rend_files)
         console.log(files)
+
+
+        var rend_folders = null;
+        if (folders != null) {
+            rend_folders = folders.map((folder) => (
+                <div className='col-sm-6 col-md-3 p-2' key={folder._id + 'folder'} >
+                    <Folder folder={folder} history={history}/>
+                </div> 
+                
+            ));
+        }
+        else {
+            rend_folders = (<div></div>)
+        }
 
         var rend_files = null;
         if (files != null) {
@@ -38,6 +50,9 @@ class ItemContainer extends Component {
                     </ol>
                 </nav>
                 <div className='container-fluid'>
+                    <div className='row flex-grow-1 '>
+                        {rend_folders}
+                    </div>
                     <div className='row flex-grow-1 '>
                         {rend_files}
                     </div>
