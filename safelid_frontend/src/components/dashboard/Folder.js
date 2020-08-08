@@ -3,82 +3,67 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { Modal } from 'react-bootstrap/';
-import { renameFile, deleteFile } from '../../actions/dashboardActions';
+import { renameFolder, deleteFolder, deleteFile, getFolderContentByID } from '../../actions/dashboardActions';
+const folderImg = require('./folder_icon.png');
 
-class File extends Component {
+class Folder extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            file: null,
+            folder: props.folder,
             modalShow: false,
             modalState: '',
             renameValue: ''
         };
     }
 
-    componentDidMount() {
-        const config = { 
-            responseType: 'arraybuffer',
-            headers: {} 
-        };
-        if (this.props.auth.token) {
-            config.headers['x-auth-token'] = this.props.auth.token;
-        }
-    
-        axios.get('http://localhost:5000/dashboard/file/' + this.props.file._id, config)
-            .then(res => {
-                const base64 = btoa(
-                    new Uint8Array(res.data).reduce(
-                        (data, byte) => data + String.fromCharCode(byte),
-                        '',
-                    ),
-                );
-                this.setState({file: "data:;base64," + base64});
-            })
-    }
-
     onRename = () => {
         const data = {
-            FileID: this.props.file._id,
+            FolderID: this.props.folder._id,
             name: this.state.renameValue
         };
-        this.props.renameFile(data);
+        this.props.renamefolder(data);
         this.modalToggle();
-    }
-
-    onDownload = () => {
-        const config = {
-            responseType: 'blob',
-            headers: {} 
-        };
-        if (this.props.auth.token) {
-            config.headers['x-auth-token'] = this.props.auth.token;
-        }
-
-        axios.get('http://localhost:5000/dashboard/file/' + this.props.file._id, config)
-            .then(res => {
-                const url = window.URL.createObjectURL(new Blob([res.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', this.props.file.filename); //or any other extension
-                document.body.appendChild(link);
-                link.click();
-                this.modalToggle();
-            });
     }
 
     onDelete = () => {
         const data = {
-            FileID: this.props.file._id
-        };
-        this.props.deleteFile(data);
+            FolderID: this.props.folder._id
+        }
+        this.props.deleteFolder(data);
+        // this.recursiveDelete(this.props.folder._id);
         this.modalToggle();
     }
+
+    // recursiveDelete = (folderID) => {
+    //     JSONObject folderContent = new JSONObject(this.props.getFolderContentByID(folderID));
+    //     const folderFolders = folderContent.getJSONArray('folders');
+    //     const folderFiles = folderContent.getJSONArray('files');
+
+    //     for (var folderNum = 0; folderNum < folderFolders.length(); folderNum++) {
+    //         this.recursiveDelete(folderFolders.getJSONObject(folderNum).getString('_id'))
+    //     }
+    //     for (var fileNum = 0; fileNum < folderFiles.length(); fileNum++) {
+    //         const fileID = folderFiles.getJSONObject(fileNum).getString('_id');
+    //         const fildData = {
+    //             FileID: fileID
+    //         };
+    //         console.log(fildData);
+    //         // this.props.deleteFile(data);
+    //     }
+
+
+    //     const folderData = {
+    //         FolderID: folderID
+    //     };
+    //     console.log(folderData);
+    //     // this.props.deletefolder(data);
+    // }
 
     cardOnClick = e => {
         e.preventDefault();
         if (e.type === 'click') {
-            window.open('http://localhost:3000/dashboard/file/' + this.props.file._id);
+            this.props.history.push('' + this.state.folder._id);
         }
         else if (e.type === 'contextmenu') {
             console.log('card right click')
@@ -104,7 +89,6 @@ class File extends Component {
                     <div>
                         <Modal.Body>
                             <button type="button" class="btn btn-outline-primary btn-sm btn-block" value='rename' onClick={this.optionOnClick}>Rename</button>
-                            <button type="button" class="btn btn-outline-primary btn-sm btn-block" onClick={this.onDownload}>Download</button>
                             <button type="button" class="btn btn-outline-danger btn-sm btn-block" value='delete' onClick={this.optionOnClick}>Delete</button>
                         </Modal.Body>
                         <Modal.Footer>
@@ -138,12 +122,7 @@ class File extends Component {
                 );
 
         }
-    }
-
-    onNotImg = (e) => {
-        e.target.src = require('./file_icon.jpg');
-    }
-    
+    }    
 
     render() {
         const buttonStyle = {
@@ -155,11 +134,11 @@ class File extends Component {
                 <>
                     <div className="card h-100">
                         <div class="embed-responsive embed-responsive-4by3">
-                            <img className="card-img-top embed-responsive-item" src={this.state.file} onError={this.onNotImg}/>
+                            <img className="card-img-top embed-responsive-item" src={folderImg}/>
                         </div>
                             
                         <div className="card-body d-flex flex-column">
-                            <p className="card-text mt-auto">{this.props.file.filename}</p>
+                            <p className="card-text mt-auto">{this.props.folder.name}</p>
                             <a className='stretched-link' onClick={this.cardOnClick} />
                             <a type='button' className="btn btn-outline-primary" style={buttonStyle} onClick={this.modalToggle}>Option</a>
                         </div>
@@ -173,18 +152,22 @@ class File extends Component {
     }
 }
 
-File.propTypes = {
-    auth: PropTypes.object.isRequired
+Folder.propTypes = {
+    auth: PropTypes.object.isRequired,
+    item: PropTypes.object.isRequired
 }
 
 const mapStateToProps = state => ({
     auth: state.auth,
+    item: state.item
 });
 
 export default connect(
     mapStateToProps,
     {
-        renameFile,
-        deleteFile
+        renameFolder, 
+        deleteFolder,
+        deleteFile,
+        getFolderContentByID
     }
-)(File);
+)(Folder);

@@ -15,7 +15,9 @@ export const toHomeFolder = history => (dispatch, getState) => {
         .then(res => {
             history.push('/dashboard/folder/' + res.data.id);
         })
-        .catch();
+        .catch(err => {
+            console.log(err);
+        });
 }
 
 export const getFolderContent = () => (dispatch, getState) => {
@@ -23,9 +25,9 @@ export const getFolderContent = () => (dispatch, getState) => {
     if (getState().auth.token) {
         config.headers['x-auth-token'] = getState().auth.token;
     }
-
-    const url = window.location.href
+    
     console.log('getFolderContent');
+    const url = window.location.href;
     axios.get(url, config)
         .then(res => {
             console.log(res.data);
@@ -33,6 +35,25 @@ export const getFolderContent = () => (dispatch, getState) => {
                 type: GET_FOLDER_CONTENT,
                 payload: res.data
             })
+        })
+        .catch(err => {
+            console.log(err);
+        });
+} 
+
+export const getFolderContentByID = (id) => (dispatch, getState) => {
+    const config = { headers: {} };
+    if (getState().auth.token) {
+        config.headers['x-auth-token'] = getState().auth.token;
+    }
+
+    const url = 'http://localhost:3000/dashboard/folder/' + id;
+    axios.get(url, config)
+        .then(res => {
+            return {
+                files: res.data.files,
+                folders: res.data.folders
+            }
         })
         .catch();
 } 
@@ -77,6 +98,37 @@ export const deleteFile = data => (dispatch, getState) => {
     axios.post('http://localhost:5000/dashboard/file/delete', data, config)
         .then(res => {
             dispatch(getFolderContent());
+        })
+        .catch(err => {
+            console.log('error');
+        });
+}
+
+export const renameFolder = data => (dispatch, getState) => {
+    const config = { headers: {} };
+    if (getState().auth.token) {
+        config.headers['x-auth-token'] = getState().auth.token;
+    }
+
+    axios.post('http://localhost:5000/dashboard/folder/rename', data, config)
+        .then(res => {
+            console.log('renamed')
+            dispatch(getFolderContent());
+        })
+        .catch(err => {
+            console.log('error');
+        });
+}
+
+export const deleteFolder = data => (dispatch, getState) => {
+    const config = { headers: {} };
+    if (getState().auth.token) {
+        config.headers['x-auth-token'] = getState().auth.token;
+    }
+
+    axios.post('http://localhost:5000/dashboard/folder/delete', data, config)
+        .then(res => {
+            // dispatch(getFolderContent());
         })
         .catch(err => {
             console.log('error');
