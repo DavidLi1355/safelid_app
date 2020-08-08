@@ -55,20 +55,20 @@ class ItemSidebar extends Component {
     }
 
     render() {
-        const { folders } = this.props.item
-        var rend_folder
-        if (folders != null) {
-            rend_folder = folders.map((folder) => (
-                <div key={folder._id + 'folder'}>
-                    <li className='nav-item'>
-                        <a className='nav-link'>{folder.name}</a>
-                    </li>
-                </div> 
-            ));
-        }
-        else {
-            rend_folder = (<div></div>)
-        }
+        // const { folders } = this.props.item
+        // var rend_folder
+        // if (folders != null) {
+        //     rend_folder = folders.map((folder) => (
+        //         <div key={folder._id + 'folder'}>
+        //             <li className='nav-item'>
+        //                 <a className='nav-link'>{folder.name}</a>
+        //             </li>
+        //         </div> 
+        //     ));
+        // }
+        // else {
+        //     rend_folder = (<div></div>)
+        // }
         
         return (
             <>
@@ -98,9 +98,9 @@ class ItemSidebar extends Component {
                     </Modal.Footer>
                 </Modal>
 
-                <ul className='nav flex-column'>
+                {/* <ul className='nav flex-column'>
                     {rend_folder}
-                </ul>
+                </ul> */}
             </>
         );
     }
