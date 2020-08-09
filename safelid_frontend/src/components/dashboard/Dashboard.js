@@ -44,8 +44,8 @@ class Dashboard extends Component {
                             </div>
                         </div>
                     </Route>
-                    <Route path='/file'></Route>
-                    <Route path='/setting'></Route>
+                    <Route path='/dashboard/file'></Route>
+                    <Route path='/dashboard/setting'></Route>
                 </Switch>
                 
             </div>

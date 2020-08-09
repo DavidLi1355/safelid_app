@@ -29,16 +29,6 @@ class ItemSidebar extends Component {
         e.preventDefault();
         this.setState({ [e.target.id]: e.target.value });
     };
-
-    onCreateFolder = e => {
-        var name = 'test';
-        var parent_folder_id = this.props.item.current_folder._id;
-        var data = {
-            'parent_folder_id': parent_folder_id,
-            'name': name
-        }
-        this.props.createFolder(data);
-    }
     
     createFolderToggle = () => {
         this.setState({modalShow: !this.state.modalShow}, () => {
@@ -50,7 +40,11 @@ class ItemSidebar extends Component {
 
     createFolderSubmit = e => {
         e.preventDefault();
-        console.log(this.state.folderName);
+        const data = {
+            'parent_folder_id': this.props.item.current_folder._id,
+            'name': this.state.folderName
+        }
+        this.props.createFolder(data);
         this.createFolderToggle();
     }
 
@@ -119,6 +113,7 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     {
-        uploadFile
+        uploadFile,
+        createFolder
     }
 )(ItemSidebar);

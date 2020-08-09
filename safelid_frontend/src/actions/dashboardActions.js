@@ -128,7 +128,7 @@ export const deleteFolder = data => (dispatch, getState) => {
 
     axios.post('http://localhost:5000/dashboard/folder/delete', data, config)
         .then(res => {
-            // dispatch(getFolderContent());
+            dispatch(getFolderContent());
         })
         .catch(err => {
             console.log('error');

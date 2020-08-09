@@ -10,6 +10,7 @@ const auth = require('../middleware/auth');
 
 const Busboy = require('busboy');
 const config = require('config');
+
 const uri = config.get('ATLAS_URI');
 const connection = mongoose.createConnection(uri, {useNewUrlParser: true, useUnifiedTopology: true});
 let bucket;
@@ -39,31 +40,30 @@ checkFolderAuth = (current_user, current_folder) => {
     );
 }
 
-// checkFileAuth = (current_folder) => {
-//     return (
-//         new Promise((resolve, reject) => {
-//             Folder.findById(current_folder)
-//                 .then(folder => {
-//                     if (!current_user.equals(folder.user_id)) {
-//                         reject({'error': 'user unauthorized for this folder'});
-//                     } 
-//                     else {
-//                         resolve(folder);
-//                     }
-//                 })
-//                 .catch(err => {
-//                     reject({'error': err});
-//                 })
-//         })
-//     );
-// }
+checkFileAuth = (current_user, current_file) => {
+    return (
+        new Promise((resolve, reject) => {
+            Folder.findById(current_folder)
+                .then(folder => {
+                    if (!current_user.equals(folder.user_id)) {
+                        reject({'error': 'user unauthorized for this folder'});
+                    } 
+                    else {
+                        resolve(folder);
+                    }
+                })
+                .catch(err => {
+                    reject({'error': err});
+                })
+        })
+    );
+}
 
 folderQuery = (current_folder) => {
     return (
         new Promise((resolve, reject) => {
             Folder.find({parent_folder_id: current_folder})
                 .then(folders => {
-                    console.log(folders)
                     resolve(folders);
                 })
                 .catch(err => {
@@ -78,7 +78,6 @@ fileQuery = (current_user, current_folder) => {
         new Promise((resolve, reject) => {
             File.find({ $and: [{'metadata.user_id': current_user}, {'metadata.parent_folder_id': current_folder}]})
                 .then(files => {
-                    console.log(files)
                     resolve(files);
                 })
                 .catch(err => {
@@ -88,7 +87,35 @@ fileQuery = (current_user, current_folder) => {
     );
 }
 
+deleteFile = (current_file) => {
+    return (
+        new Promise((resolve, reject) => {
+            bucket.delete(current_file, (err) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        })
+    );
+}
 
+deleteFolder = (current_folder) => {
+    return (
+        new Promise((resolve, reject) => {
+            Folder.deleteOne({_id: current_folder}, (err) => {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve();
+                }
+            });
+        })
+    );
+}
 
 
 
@@ -110,12 +137,11 @@ router.get('/folder/:FolderID', auth, (req, res) => {
     const current_folder = mongoose.Types.ObjectId(req.params.FolderID);
 
     Promise.all([folderQuery(current_folder), fileQuery(current_user, current_folder), checkFolderAuth(current_user, current_folder)])
-        .then(results => {
-            console.log('success')
-            res.send({'folders': results[0], 'files': results[1], 'current_folder': results[2]});
+        .then(resolve => {
+            res.send({'folders': resolve[0], 'files': resolve[1], 'current_folder': resolve[2]});
         })
-        .catch(err => {
-            res.status(403).send(err)
+        .catch(reject => {
+            res.status(403).send(reject)
         })
 });
 
@@ -139,14 +165,9 @@ router.post('/file/rename/', auth, (req, res) => {
 
 router.post('/file/delete/', auth, (req, res) => {
     const current_file = mongoose.Types.ObjectId(req.body.FileID);
-    bucket.delete(current_file, (err) => {
-        if (err) {
-            res.status(400).send(err);
-        }
-        else {
-            res.sendStatus(200);
-        }
-    });
+    deleteFile(current_file)
+        .then(resolve => res.sendStatus(200))
+        .catch(reject => res.status(400).send(reject));
 });
 
 router.post('/folder/rename/', auth, (req, res) => {
@@ -164,58 +185,179 @@ router.post('/folder/rename/', auth, (req, res) => {
 router.post('/folder/delete/', auth, (req, res) => {
     const current_user = mongoose.Types.ObjectId(req.user.id);
     const current_folder = req.body.FolderID;
-    console.log('in delete folder api')
+    console.log('in delete folder api');
     recursiveDelete(current_user, current_folder);
     res.sendStatus(200);
-
-    // const current_folder = mongoose.Types.ObjectId(req.body.FolderID);
-    // Folder.deleteOne({_id: current_folder}, (err) => {
-    //     if (err) {
-    //         res.status(400).send(err);
-    //     }
-    //     else {
-    //         res.sendStatus(200);
-    //     }
-    // });
 });
 
 
 
-recursiveDelete = (current_user, current_folder) => {
-    current_folder = mongoose.Types.ObjectId(current_folder);
-
-    Promise.all([folderQuery(current_folder), fileQuery(current_user, current_folder)])
-        .then(results => {
-            const folderFolders = results[0];
-            const folderFiles = results[1];            
-
-            for (var folderNum = 0; folderNum < folderFolders.length; folderNum++) {
-                console.log('before recursive')
-                recursiveDelete(current_user, folderFolders[folderNum]._id)
-            }
-            for (var fileNum = 0; fileNum < folderFiles.length; fileNum++) {
-                const fileID = mongoose.Types.ObjectId(folderFiles[fileNum]._id);
-                const fildData = {
-                    FileID: fileID
-                };
-                console.log('delete file id: ' + fileID);
-                // this.props.deleteFile(data);
-            }
-
-            const folderID = current_folder;
-            const folderData = {
-                FolderID: folderID
-            };
-            console.log('delete folder id: ' + folderID);
-
-            // this.props.deletefolder(data);
-            
-        })
-        .catch(err => {
-            console.log('in error')
-        });
+recursiveDelete = async (current_user, current_folder) => {
+    const items_to_delete = await findAllItemInFolder(current_user, current_folder);
+    for (var itemNum = 0; itemNum < items_to_delete.length; itemNum++) {
+        const itemID = mongoose.Types.ObjectId(items_to_delete[itemNum].id);
+        switch(items_to_delete[itemNum].type) {
+            case 'file':
+                deleteFile(itemID).then();
+                console.log('deleted file id: ' + items_to_delete[itemNum].id);
+                break;
+            case 'folder': 
+                deleteFolder(itemID).then();
+                console.log('deleted folder id: ' + items_to_delete[itemNum].id);
+                break;
+        }
+    }
 
 }
+
+findAllItemInFolder = async (current_user, current_folder) => {
+    var items_to_delete = [];
+    
+    current_folder = mongoose.Types.ObjectId(current_folder);
+
+    const folderFolders = await folderQuery(current_folder);
+    const folderFiles = await fileQuery(current_user, current_folder);
+
+    for (var fileNum = 0; fileNum < folderFiles.length; fileNum++) {
+        const current_file = mongoose.Types.ObjectId(folderFiles[fileNum]._id);
+        console.log('added --- file: ' + current_file);
+        items_to_delete.push({'type': 'file', 'id': current_file});
+    }
+
+    console.log('added --- folder: ' + current_folder);
+    items_to_delete.push({'type': 'folder', 'id': current_folder});
+
+    for (var folderNum = 0; folderNum < folderFolders.length; folderNum++) {
+        const temp = await findAllItemInFolder(current_user, folderFolders[folderNum]._id);
+        items_to_delete = items_to_delete.concat(temp);
+    }
+
+    return items_to_delete;
+}
+
+
+
+// return (
+//     new Promise((resolve, reject) => {
+//         var items_to_delete = [];
+
+//         current_folder = mongoose.Types.ObjectId(current_folder);
+
+//         console.log('current_folder: ' + current_folder);
+//         console.log('initial items to delete: ' + items_to_delete)
+
+//         Promise.all([folderQuery(current_folder), fileQuery(current_user, current_folder)])
+//             .then(results => {
+//                 const folderFolders = results[0];
+//                 const folderFiles = results[1];
+
+//                 for (var fileNum = 0; fileNum < folderFiles.length; fileNum++) {
+//                     const current_file = mongoose.Types.ObjectId(folderFiles[fileNum]._id);
+//                     console.log('added --- file: ' + folderFiles[fileNum]._id);
+//                     items_to_delete.push({'file': current_file});
+//                 }
+
+//                 console.log('added --- folder: ' + current_folder);
+//                 items_to_delete.push({'folder': current_folder});
+
+//                 if (folderFolders.length == 0) {
+//                     resolve(items_to_delete);
+//                 }
+//                 else {
+//                     for (var folderNum = 0; folderNum < folderFolders.length; folderNum++) {
+//                         resolve(recursiveDelete(current_user, folderFolders[folderNum]._id).then(temp => {
+//                             console.log('temp: ' + temp);
+//                             console.log('items_to_delete: ' + items_to_delete);
+//                             items_to_delete = items_to_delete.concat(temp);
+//                         }));
+                        
+//                     }
+//                 }
+//             })
+//             .catch(errors => {
+//                 console.log('promise all error: ' + errors);
+//             });
+//     })
+// )
+
+
+
+    // var items_to_delete = [];
+    
+    // current_folder = mongoose.Types.ObjectId(current_folder);
+
+    // Promise.all([folderQuery(current_folder), fileQuery(current_user, current_folder)])
+    //     .then(results => {
+    //         const folderFolders = results[0];
+    //         const folderFiles = results[1];
+
+    //         for (var fileNum = 0; fileNum < folderFiles.length; fileNum++) {
+    //             const current_file = mongoose.Types.ObjectId(folderFiles[fileNum]._id);
+    //             console.log('added --- file: ' + current_file);
+    //             items_to_delete.push({'file': current_file});
+    //         }
+
+    //         console.log('added --- folder: ' + current_folder);
+    //         items_to_delete.push({'folder': current_folder});
+
+            
+
+    //         for (var folderNum = 0; folderNum < folderFolders.length; folderNum++) {
+    //             console.log('current_folder: ' + current_folder + ' folderNum: ' + folderNum);
+    //             const temp = recursiveDelete(current_user, folderFolders[folderNum]._id);
+    //             items_to_delete = items_to_delete.concat(temp);
+    //         }
+
+    //         console.log('return item_to_delete')
+    //         return items_to_delete;
+    //     })
+    //     .catch(errors => {
+    //         console.log('promise all error: ' + errors);
+    //     });
+    
+
+
+
+    // return (
+    //     new Promise((resolve, reject) => {
+    //         current_folder = mongoose.Types.ObjectId(current_folder);
+
+    //         Promise.all([folderQuery(current_folder), fileQuery(current_user, current_folder)])
+    //             .then(results => {
+    //                 const folderFolders = results[0];
+    //                 const folderFiles = results[1];            
+
+    //                 for (var folderNum = 0; folderNum < folderFolders.length; folderNum++) {
+    //                     recursiveDelete(current_user, folderFolders[folderNum]._id)
+    //                 }
+    //                 for (var fileNum = 0; fileNum < folderFiles.length; fileNum++) {
+    //                     const current_file = mongoose.Types.ObjectId(folderFiles[fileNum]._id);
+    //                     console.log('delete file id: ' + current_file);
+    //                     deleteFile(current_file)
+    //                         .then(result => resolve())
+    //                         .catch(error => {
+    //                             console.log('deleteFile error')
+    //                             reject(error)
+    //                         });
+    //                 }
+
+    //                 console.log('delete folder id: ' + current_folder);
+    //                 deleteFolder(current_folder)
+    //                     .then(result => resolve())
+    //                     .catch(error => {
+    //                         console.log('deleteFolder error')
+    //                         reject(error)
+    //                     });
+                    
+    //             })
+    //             .catch(errors => {
+    //                 console.log('promise all error')
+    //             });
+            
+    //     })
+
+    // );
+
 
 //upload.single('file')
 router.post('/upload', auth, (req, res) => {
