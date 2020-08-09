@@ -237,48 +237,6 @@ findAllItemInFolder = async (current_user, current_folder) => {
 
 
 
-// return (
-//     new Promise((resolve, reject) => {
-//         var items_to_delete = [];
-
-//         current_folder = mongoose.Types.ObjectId(current_folder);
-
-//         console.log('current_folder: ' + current_folder);
-//         console.log('initial items to delete: ' + items_to_delete)
-
-//         Promise.all([folderQuery(current_folder), fileQuery(current_user, current_folder)])
-//             .then(results => {
-//                 const folderFolders = results[0];
-//                 const folderFiles = results[1];
-
-//                 for (var fileNum = 0; fileNum < folderFiles.length; fileNum++) {
-//                     const current_file = mongoose.Types.ObjectId(folderFiles[fileNum]._id);
-//                     console.log('added --- file: ' + folderFiles[fileNum]._id);
-//                     items_to_delete.push({'file': current_file});
-//                 }
-
-//                 console.log('added --- folder: ' + current_folder);
-//                 items_to_delete.push({'folder': current_folder});
-
-//                 if (folderFolders.length == 0) {
-//                     resolve(items_to_delete);
-//                 }
-//                 else {
-//                     for (var folderNum = 0; folderNum < folderFolders.length; folderNum++) {
-//                         resolve(recursiveDelete(current_user, folderFolders[folderNum]._id).then(temp => {
-//                             console.log('temp: ' + temp);
-//                             console.log('items_to_delete: ' + items_to_delete);
-//                             items_to_delete = items_to_delete.concat(temp);
-//                         }));
-                        
-//                     }
-//                 }
-//             })
-//             .catch(errors => {
-//                 console.log('promise all error: ' + errors);
-//             });
-//     })
-// )
 
 
 
@@ -316,47 +274,6 @@ findAllItemInFolder = async (current_user, current_folder) => {
     //     });
     
 
-
-
-    // return (
-    //     new Promise((resolve, reject) => {
-    //         current_folder = mongoose.Types.ObjectId(current_folder);
-
-    //         Promise.all([folderQuery(current_folder), fileQuery(current_user, current_folder)])
-    //             .then(results => {
-    //                 const folderFolders = results[0];
-    //                 const folderFiles = results[1];            
-
-    //                 for (var folderNum = 0; folderNum < folderFolders.length; folderNum++) {
-    //                     recursiveDelete(current_user, folderFolders[folderNum]._id)
-    //                 }
-    //                 for (var fileNum = 0; fileNum < folderFiles.length; fileNum++) {
-    //                     const current_file = mongoose.Types.ObjectId(folderFiles[fileNum]._id);
-    //                     console.log('delete file id: ' + current_file);
-    //                     deleteFile(current_file)
-    //                         .then(result => resolve())
-    //                         .catch(error => {
-    //                             console.log('deleteFile error')
-    //                             reject(error)
-    //                         });
-    //                 }
-
-    //                 console.log('delete folder id: ' + current_folder);
-    //                 deleteFolder(current_folder)
-    //                     .then(result => resolve())
-    //                     .catch(error => {
-    //                         console.log('deleteFolder error')
-    //                         reject(error)
-    //                     });
-                    
-    //             })
-    //             .catch(errors => {
-    //                 console.log('promise all error')
-    //             });
-            
-    //     })
-
-    // );
 
 
 //upload.single('file')

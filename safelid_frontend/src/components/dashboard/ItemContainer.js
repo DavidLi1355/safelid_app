@@ -5,11 +5,43 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import File from './File';
 import Folder from './Folder';
 
-import { getFolderContent } from '../../actions/dashboardActions';
+import { toHomeFolder } from '../../actions/dashboardActions';
 
 class ItemContainer extends Component {
+    
+    onHome = () => {
+        this.props.toHomeFolder(this.props.history);
+    }
+
+    onBack = () => {
+        this.props.history.push(this.props.item.current_folder.parent_folder_id);
+    }
+
+    breadcrumbContent = () => {
+        if (this.props.item.current_folder !== null) {
+            if (this.props.item.current_folder.parent_folder_id === null) {
+                return (
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item" onClick={this.onHome} style={{cursor: 'pointer'}}>Home</li>
+                    </ol>
+                );
+                
+            }
+            else {
+                return (
+                    <ol className="breadcrumb">
+                        <li className="breadcrumb-item" onClick={this.onHome} style={{cursor: 'pointer'}}>Home</li>
+                        <li className="breadcrumb-item" onClick={this.onBack} style={{cursor: 'pointer'}}>Back</li>
+                    </ol>
+                )
+            }
+        }
+    }
+
 
     render() {
+        console.log('itemcontainer rendered')
+
         const { files, folders } = this.props.item;
         const { history } = this.props;
         console.log(rend_files)
@@ -45,9 +77,7 @@ class ItemContainer extends Component {
         return (
             <>
                 <nav aria-label="breadcrumb">
-                    <ol className="breadcrumb">
-                        <li className="breadcrumb-item"><a href=''>Home</a></li>
-                    </ol>
+                    {this.breadcrumbContent()}
                 </nav>
                 <div className='container-fluid'>
                     <div className='row flex-grow-1 '>
@@ -72,5 +102,7 @@ const mapStateToProps = state => ({
 
 export default connect(
     mapStateToProps,
-    {getFolderContent}
+    {
+        toHomeFolder
+    }
 )(ItemContainer);
