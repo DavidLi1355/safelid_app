@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 import { Modal } from 'react-bootstrap/';
 import { renameFolder, deleteFolder, deleteFile, getFolderContentByID } from '../../actions/dashboardActions';
 const folderImg = require('./folder_icon.png');
@@ -31,34 +30,8 @@ class Folder extends Component {
             FolderID: this.props.folder._id
         }
         this.props.deleteFolder(data);
-        // this.recursiveDelete(this.props.folder._id);
         this.modalToggle();
     }
-
-    // recursiveDelete = (folderID) => {
-    //     JSONObject folderContent = new JSONObject(this.props.getFolderContentByID(folderID));
-    //     const folderFolders = folderContent.getJSONArray('folders');
-    //     const folderFiles = folderContent.getJSONArray('files');
-
-    //     for (var folderNum = 0; folderNum < folderFolders.length(); folderNum++) {
-    //         this.recursiveDelete(folderFolders.getJSONObject(folderNum).getString('_id'))
-    //     }
-    //     for (var fileNum = 0; fileNum < folderFiles.length(); fileNum++) {
-    //         const fileID = folderFiles.getJSONObject(fileNum).getString('_id');
-    //         const fildData = {
-    //             FileID: fileID
-    //         };
-    //         console.log(fildData);
-    //         // this.props.deleteFile(data);
-    //     }
-
-
-    //     const folderData = {
-    //         FolderID: folderID
-    //     };
-    //     console.log(folderData);
-    //     // this.props.deletefolder(data);
-    // }
 
     cardOnClick = e => {
         e.preventDefault();
@@ -88,11 +61,11 @@ class Folder extends Component {
                 return (
                     <div>
                         <Modal.Body>
-                            <button type="button" class="btn btn-outline-primary btn-sm btn-block" value='rename' onClick={this.optionOnClick}>Rename</button>
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-block" value='delete' onClick={this.optionOnClick}>Delete</button>
+                            <button type="button" className="btn btn-outline-primary btn-sm btn-block" value='rename' onClick={this.optionOnClick}>Rename</button>
+                            <button type="button" className="btn btn-outline-danger btn-sm btn-block" value='delete' onClick={this.optionOnClick}>Delete</button>
                         </Modal.Body>
                         <Modal.Footer>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" onClick={this.modalToggle}>Close</button>
+                            <button type="button" className="btn btn-outline-secondary btn-sm" onClick={this.modalToggle}>Close</button>
                         </Modal.Footer>
                     </div>
                 );
@@ -104,8 +77,8 @@ class Folder extends Component {
                             <input type="text" className="form-control" id="rename" onChange={(e) => {this.setState({ renameValue: e.target.value });}} onSubmit={this.onRename} />
                         </Modal.Body>
                         <Modal.Footer>
-                            <button type="button" class="btn btn-outline-primary btn-sm" value='option' onClick={this.onRename}>Rename</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" value='option' onClick={this.optionOnClick}>Back</button>
+                            <button type="button" className="btn btn-outline-secondary btn-sm" value='option' onClick={this.optionOnClick}>Back</button>
+                            <button type="button" className="btn btn-outline-primary btn-sm" value='option' onClick={this.onRename}>Rename</button>
                         </Modal.Footer>
                     </div>
                 );
@@ -113,14 +86,15 @@ class Folder extends Component {
                 return (
                     <div>
                         <Modal.Body>
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-block" value='delete' onClick={this.onDelete}>Delete</button>
+                            <button type="button" className="btn btn-outline-danger btn-sm btn-block" value='delete' onClick={this.onDelete}>Delete</button>
                         </Modal.Body>
                         <Modal.Footer>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" value='option' onClick={this.optionOnClick}>Back</button>
+                            <button type="button" className="btn btn-outline-secondary btn-sm" value='option' onClick={this.optionOnClick}>Back</button>
                         </Modal.Footer>
                     </div>
                 );
-
+            default:
+                return (<div></div>);
         }
     }    
 
@@ -133,14 +107,14 @@ class Folder extends Component {
         return (
                 <>
                     <div className="card h-100">
-                        <div class="embed-responsive embed-responsive-4by3">
-                            <img className="card-img-top embed-responsive-item" src={folderImg}/>
+                        <div className="embed-responsive embed-responsive-4by3">
+                            <img className="card-img-top embed-responsive-item" src={folderImg} alt=''/>
                         </div>
                             
                         <div className="card-body d-flex flex-column">
-                            <p className="card-text mt-auto">{this.props.folder.name}</p>
+                            <p className="card-text mb-2">{this.props.folder.name}</p>
                             <a className='stretched-link' onClick={this.cardOnClick} />
-                            <a type='button' className="btn btn-outline-primary" style={buttonStyle} onClick={this.modalToggle}>Option</a>
+                            <a type='button' className="btn btn-outline-primary mt-auto" style={buttonStyle} onClick={this.modalToggle}>Option</a>
                         </div>
                     </div>
 

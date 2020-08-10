@@ -37,6 +37,10 @@ class File extends Component {
             })
     }
 
+    onInputChange = (e) => {
+        this.setState({ [e.target.id] : e.target.value });
+    }
+
     onRename = () => {
         const data = {
             FileID: this.props.file._id,
@@ -103,12 +107,12 @@ class File extends Component {
                 return (
                     <div>
                         <Modal.Body>
-                            <button type="button" class="btn btn-outline-primary btn-sm btn-block" value='rename' onClick={this.optionOnClick}>Rename</button>
-                            <button type="button" class="btn btn-outline-primary btn-sm btn-block" onClick={this.onDownload}>Download</button>
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-block" value='delete' onClick={this.optionOnClick}>Delete</button>
+                            <button type="button" className="btn btn-outline-primary btn-sm btn-block" value='rename' onClick={this.optionOnClick}>Rename</button>
+                            <button type="button" className="btn btn-outline-primary btn-sm btn-block" onClick={this.onDownload}>Download</button>
+                            <button type="button" className="btn btn-outline-danger btn-sm btn-block" value='delete' onClick={this.optionOnClick}>Delete</button>
                         </Modal.Body>
                         <Modal.Footer>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" onClick={this.modalToggle}>Close</button>
+                            <button type="button" className="btn btn-outline-secondary btn-sm" onClick={this.modalToggle}>Close</button>
                         </Modal.Footer>
                     </div>
                 );
@@ -117,11 +121,11 @@ class File extends Component {
                     <div>
                         <Modal.Body>
                             <label>Rename</label>
-                            <input type="text" className="form-control" id="rename" onChange={(e) => {this.setState({ renameValue: e.target.value });}} onSubmit={this.onRename} />
+                            <input type="text" className="form-control" id="renameValue" onChange={this.onInputChange} onSubmit={this.onRename} />
                         </Modal.Body>
                         <Modal.Footer>
-                            <button type="button" class="btn btn-outline-primary btn-sm" value='option' onClick={this.onRename}>Rename</button>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" value='option' onClick={this.optionOnClick}>Back</button>
+                            <button type="button" className="btn btn-outline-secondary btn-sm" value='option' onClick={this.optionOnClick}>Back</button>
+                            <button type="button" className="btn btn-outline-primary btn-sm" value='option' onClick={this.onRename}>Rename</button>
                         </Modal.Footer>
                     </div>
                 );
@@ -129,14 +133,15 @@ class File extends Component {
                 return (
                     <div>
                         <Modal.Body>
-                            <button type="button" class="btn btn-outline-danger btn-sm btn-block" value='delete' onClick={this.onDelete}>Delete</button>
+                            <button type="button" className="btn btn-outline-danger btn-sm btn-block" value='delete' onClick={this.onDelete}>Delete</button>
                         </Modal.Body>
                         <Modal.Footer>
-                            <button type="button" class="btn btn-outline-secondary btn-sm" value='option' onClick={this.optionOnClick}>Back</button>
+                            <button type="button" className="btn btn-outline-secondary btn-sm" value='option' onClick={this.optionOnClick}>Back</button>
                         </Modal.Footer>
                     </div>
                 );
-
+            default:
+                return (<div></div>);
         }
     }
 
@@ -154,14 +159,14 @@ class File extends Component {
         return (
                 <>
                     <div className="card h-100">
-                        <div class="embed-responsive embed-responsive-4by3">
-                            <img className="card-img-top embed-responsive-item" src={this.state.file} onError={this.onNotImg}/>
+                        <div className="embed-responsive embed-responsive-4by3">
+                            <img className="card-img-top embed-responsive-item" src={this.state.file} onError={this.onNotImg} alt=''/>
                         </div>
                             
                         <div className="card-body d-flex flex-column">
-                            <p className="card-text mt-auto">{this.props.file.filename}</p>
+                            <a className="card-text mb-2 ">{this.props.file.filename}</a>
                             <a className='stretched-link' onClick={this.cardOnClick} />
-                            <a type='button' className="btn btn-outline-primary" style={buttonStyle} onClick={this.modalToggle}>Option</a>
+                            <a type='button' className="btn btn-outline-primary mt-auto" style={buttonStyle} onClick={this.modalToggle}>Option</a>
                         </div>
                     </div>
 
