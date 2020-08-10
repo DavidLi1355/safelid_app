@@ -187,7 +187,6 @@ router.post('/folder/rename/', auth, (req, res) => {
 router.post('/folder/delete/', auth, (req, res) => {
     const current_user = mongoose.Types.ObjectId(req.user.id);
     const current_folder = req.body.FolderID;
-    console.log('in delete folder api');
     recursiveDelete(current_user, current_folder);
     res.sendStatus(200);
 });
@@ -201,17 +200,17 @@ recursiveDelete = async (current_user, current_folder) => {
         switch(items_to_delete[itemNum].type) {
             case 'file':
                 deleteFile(itemID).then();
-                console.log('deleted file id: ' + items_to_delete[itemNum].id);
                 break;
             case 'folder': 
                 deleteFolder(itemID).then();
-                console.log('deleted folder id: ' + items_to_delete[itemNum].id);
                 break;
         }
     }
 
 }
 
+
+// recursively find all items inside a folder and add them into a json array
 findAllItemInFolder = async (current_user, current_folder) => {
     var items_to_delete = [];
     
@@ -222,11 +221,9 @@ findAllItemInFolder = async (current_user, current_folder) => {
 
     for (var fileNum = 0; fileNum < folderFiles.length; fileNum++) {
         const current_file = mongoose.Types.ObjectId(folderFiles[fileNum]._id);
-        console.log('added --- file: ' + current_file);
         items_to_delete.push({'type': 'file', 'id': current_file});
     }
 
-    console.log('added --- folder: ' + current_folder);
     items_to_delete.push({'type': 'folder', 'id': current_folder});
 
     for (var folderNum = 0; folderNum < folderFolders.length; folderNum++) {

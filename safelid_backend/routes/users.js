@@ -31,7 +31,6 @@ router.post('/register', (req, res) => {
 
     User.find({$or: [{email: emailLower},{username: usernameLower}]}).then(users => {
         let dupErrors = {};
-        console.log(users)
         users.forEach((user) => {
             if (user.email === emailLower) {
                 dupErrors.email = "Email already exists";
