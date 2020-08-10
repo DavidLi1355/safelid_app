@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const mongoose = require('mongoose');
 const util = require('util')
+const bcrypt = require('bcryptjs');
+const validateChangePasswordInput = require("../validation/changePassword");
 
 const User = require('../models/user_model');
 const Folder = require('../models/folder_model');
@@ -341,6 +343,58 @@ router.post('/createFolder', auth, (req, res) => {
         }))
         .catch(err => console.log(err));
 });
+
+router.post('/changeName', auth, (req, res) => {
+    const current_user = mongoose.Types.ObjectId(req.user.id);
+
+    User.updateOne({_id: current_user}, {name: req.body.name}, (err) => {
+        if (err) {
+            res.status(400).send(err);
+        }
+        else {
+            res.sendStatus(200);
+        }
+    });
+});
+
+
+router.post('/changePassword', auth, (req, res) => {
+    const current_user = mongoose.Types.ObjectId(req.user.id);
+    const oldPassword = req.body.oldPassword;
+    const newPassword = req.body.newPassword;
+
+    // Form validation
+    const { errors, isValid } = validateChangePasswordInput(req.body);
+    // Check validation
+    if (!isValid) {
+        return res.status(400).send('input error');
+    }
+
+    User.findById(current_user).then(user => {
+        bcrypt.compare(oldPassword, user.password).then(isMatch => {
+            if (isMatch) {
+                bcrypt.genSalt(10, (err, salt) => {
+                    bcrypt.hash(newPassword, salt, (err, hash) => {
+                        if (err) throw err;
+                        User.updateOne({_id: current_user}, {password: hash}, (err) => {
+                            if (err) {
+                                return res.status(400).send(err);
+                            }
+                            else {
+                                return res.sendStatus(200);
+                            }
+                        });
+                    });
+                });
+            }
+            else {
+                return res.status(400).send('old password incorrect');
+            }
+        });
+    });
+});
+
+
 
 
 module.exports = router;

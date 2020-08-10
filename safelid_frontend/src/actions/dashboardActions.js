@@ -147,6 +147,17 @@ export const deleteFolder = data => (dispatch, getState) => {
 //         })
 // }
 
+export const changeName = data => (dispatch, getState) => {
+    const config = { headers: {} };
+    if (getState().auth.token) {
+        config.headers['x-auth-token'] = getState().auth.token;
+    }
+
+    axios.post('http://localhost:5000/dashboard/changeName', data, config)
+        .then()
+        .catch();
+}
+
 export const createFolder = data => (dispatch, getState) => {
     const config = { headers: {} };
     if (getState().auth.token) {
