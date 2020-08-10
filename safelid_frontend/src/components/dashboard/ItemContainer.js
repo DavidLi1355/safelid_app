@@ -8,7 +8,7 @@ import Folder from './Folder';
 import { toHomeFolder } from '../../actions/dashboardActions';
 
 class ItemContainer extends Component {
-    
+
     onHome = () => {
         this.props.toHomeFolder(this.props.history);
     }
@@ -17,7 +17,7 @@ class ItemContainer extends Component {
         this.props.history.push(this.props.item.current_folder.parent_folder_id);
     }
 
-    breadcrumbContent = () => {
+    breadcrumbContent = () => {        
         if (this.props.item.current_folder !== null) {
             if (this.props.item.current_folder.parent_folder_id === null) {
                 return (
@@ -38,15 +38,9 @@ class ItemContainer extends Component {
         }
     }
 
-
     render() {
-        console.log('itemcontainer rendered')
-
         const { files, folders } = this.props.item;
         const { history } = this.props;
-        console.log(rend_files)
-        console.log(files)
-
 
         var rend_folders = null;
         if (folders != null) {
