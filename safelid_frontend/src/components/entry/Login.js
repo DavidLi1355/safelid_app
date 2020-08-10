@@ -44,7 +44,6 @@ class Login extends Component {
                         />
                         <span>
                             {error.input}
-                            {error.inputnotfound}
                         </span>
                     </div>
                     <div className="card-content">
@@ -54,7 +53,6 @@ class Login extends Component {
                         />
                         <span>
                             {error.password}
-                            {error.passwordincorrect}
                         </span>
                     </div>
                     <button type="submit" className="btn btn-primary mt-3">Login</button>

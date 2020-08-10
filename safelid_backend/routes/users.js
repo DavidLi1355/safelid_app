@@ -107,7 +107,7 @@ router.post('/login', (req, res) => {
 
         // Check if user exists
         if (isEmpty(user)) {
-            return res.status(404).json({ inputnotfound: "Email or username not found" });
+            return res.status(404).json({ input: "Email or username not found" });
         }
 
         // Check password
@@ -140,7 +140,7 @@ router.post('/login', (req, res) => {
                 );
             } else {
                 return res.status(400)
-                    .json({ passwordincorrect: 'Password incorrect' });
+                    .json({ password: 'Password incorrect' });
             }
         });
     });

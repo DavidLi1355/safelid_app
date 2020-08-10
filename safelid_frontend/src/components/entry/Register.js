@@ -58,7 +58,7 @@ class Register extends Component {
                             className="form-control" 
                         />
                         <span>
-
+                            {error.email}
                         </span>
                     </div>
                     <div className="card-content">
@@ -67,7 +67,7 @@ class Register extends Component {
                             className="form-control" 
                         />
                         <span>
-                            
+                            {error.username}
                         </span>
                     </div>
                     <div className="card-content">
@@ -76,7 +76,7 @@ class Register extends Component {
                             className="form-control" 
                         />
                         <span>
-                            
+                            {error.password}   
                         </span>
                     </div>
                     <div className="card-content">
@@ -85,7 +85,7 @@ class Register extends Component {
                             className="form-control" 
                         />
                         <span>
-                            
+                            {error.confirm_password}
                         </span>
                     </div>
                     <button type="submit" className="btn btn-primary mt-3">Register</button>
