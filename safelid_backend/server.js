@@ -25,6 +25,5 @@ app.listen(port, () => {
 
 
 // Routes
-app.use('/', require('./routes/users'));
-app.use('/', require('./routes/dashboard'));
-app.use('/dashboard', require('./routes/dashboard'));
+app.use('/api', require('./routes/users'));
+app.use('/api/dashboard', require('./routes/dashboard'));

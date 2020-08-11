@@ -16,7 +16,7 @@ export const registerUser = (userData, history) => dispatch => {
         }
     };
     
-    axios.post('http://localhost:5000/register', userData, config)
+    axios.post('/api/register', userData, config)
         .then(res => {
             history.push('/login');
         })
@@ -32,7 +32,7 @@ export const loginUser = userData => dispatch => {
         }
     };
     
-    axios.post('http://localhost:5000/login', userData, config)
+    axios.post('/api/login', userData, config)
         .then(res => {
             dispatch({
                 type: LOGIN_SUCCESS
@@ -64,7 +64,7 @@ export const loadUser = () => (dispatch, getState) => new Promise((resolve, rejc
         config.headers['x-auth-token'] = token;
     }
 
-    axios.get('http://localhost:5000/userauth', config)
+    axios.get('/api/userauth', config)
         .then(res => {
             dispatch({
                 type: LOGIN_SUCCESS

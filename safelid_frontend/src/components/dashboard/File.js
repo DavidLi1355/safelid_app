@@ -25,7 +25,7 @@ class File extends Component {
             config.headers['x-auth-token'] = this.props.auth.token;
         }
     
-        axios.get('http://localhost:5000/dashboard/file/' + this.props.file._id, config)
+        axios.get('/api/dashboard/file/' + this.props.file._id, config)
             .then(res => {
                 const base64 = btoa(
                     new Uint8Array(res.data).reduce(
@@ -59,7 +59,7 @@ class File extends Component {
             config.headers['x-auth-token'] = this.props.auth.token;
         }
 
-        axios.get('http://localhost:5000/dashboard/file/' + this.props.file._id, config)
+        axios.get('/api/dashboard/file/' + this.props.file._id, config)
             .then(res => {
                 const url = window.URL.createObjectURL(new Blob([res.data]));
                 const link = document.createElement('a');
@@ -82,7 +82,8 @@ class File extends Component {
     cardOnClick = e => {
         e.preventDefault();
         if (e.type === 'click') {
-            window.open('http://localhost:3000/dashboard/file/' + this.props.file._id);
+            const url = window.location.hostname;
+            window.open(url + '/api/dashboard/file/' + this.props.file._id);
         }
         else if (e.type === 'contextmenu') {
             console.log('card right click')

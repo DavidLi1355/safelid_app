@@ -11,7 +11,7 @@ export const toHomeFolder = history => (dispatch, getState) => {
         config.headers['x-auth-token'] = getState().auth.token;
     }
 
-    axios.get('http://localhost:5000/dashboard/homefolder', config)
+    axios.get('/api/dashboard/homefolder', config)
         .then(res => {
             history.push('/dashboard/folder/' + res.data.id);
         })
@@ -25,10 +25,9 @@ export const getFolderContent = () => (dispatch, getState) => {
     if (getState().auth.token) {
         config.headers['x-auth-token'] = getState().auth.token;
     }
-    
-    console.log('getFolderContent');
-    const url = window.location.href;
-    axios.get(url, config)
+
+    const url = window.location.pathname;
+    axios.get('/api' + url, config)
         .then(res => {
             console.log(res.data);
             dispatch({
@@ -47,7 +46,7 @@ export const getFolderContentByID = (id) => (dispatch, getState) => {
         config.headers['x-auth-token'] = getState().auth.token;
     }
 
-    const url = 'http://localhost:3000/dashboard/folder/' + id;
+    const url = '/api/dashboard/folder/' + id;
     axios.get(url, config)
         .then(res => {
             return {
@@ -64,7 +63,7 @@ export const uploadFile = data => (dispatch, getState) => {
         config.headers['x-auth-token'] = getState().auth.token;
     }
 
-    axios.post('http://localhost:5000/dashboard/upload', data, config)
+    axios.post('/api/dashboard/upload', data, config)
         .then(res => {
             dispatch(getFolderContent());
         })
@@ -79,7 +78,7 @@ export const renameFile = data => (dispatch, getState) => {
         config.headers['x-auth-token'] = getState().auth.token;
     }
 
-    axios.post('http://localhost:5000/dashboard/file/rename', data, config)
+    axios.post('/api/dashboard/file/rename', data, config)
         .then(res => {
             console.log('renamed')
             dispatch(getFolderContent());
@@ -95,7 +94,7 @@ export const deleteFile = data => (dispatch, getState) => {
         config.headers['x-auth-token'] = getState().auth.token;
     }
 
-    axios.post('http://localhost:5000/dashboard/file/delete', data, config)
+    axios.post('/api/dashboard/file/delete', data, config)
         .then(res => {
             dispatch(getFolderContent());
         })
@@ -110,7 +109,7 @@ export const renameFolder = data => (dispatch, getState) => {
         config.headers['x-auth-token'] = getState().auth.token;
     }
 
-    axios.post('http://localhost:5000/dashboard/folder/rename', data, config)
+    axios.post('/api/dashboard/folder/rename', data, config)
         .then(res => {
             console.log('renamed')
             dispatch(getFolderContent());
@@ -126,7 +125,7 @@ export const deleteFolder = data => (dispatch, getState) => {
         config.headers['x-auth-token'] = getState().auth.token;
     }
 
-    axios.post('http://localhost:5000/dashboard/folder/delete', data, config)
+    axios.post('/api/dashboard/folder/delete', data, config)
         .then(res => {
             dispatch(getFolderContent());
         })
@@ -153,7 +152,7 @@ export const changeName = data => (dispatch, getState) => {
         config.headers['x-auth-token'] = getState().auth.token;
     }
 
-    axios.post('http://localhost:5000/dashboard/changeName', data, config)
+    axios.post('/api/dashboard/changeName', data, config)
         .then()
         .catch();
 }
@@ -164,7 +163,7 @@ export const createFolder = data => (dispatch, getState) => {
         config.headers['x-auth-token'] = getState().auth.token;
     }
 
-    axios.post('http://localhost:5000/dashboard/createFolder', data, config)
+    axios.post('/api/dashboard/createFolder', data, config)
         .then(res => {
             dispatch(getFolderContent());
         })

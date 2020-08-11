@@ -70,7 +70,7 @@ class DashboardNavBar extends Component {
             newPassword: this.state.newPasswordValue
         }
 
-        axios.post('http://localhost:5000/dashboard/changePassword', data, config)
+        axios.post('/api/dashboard/changePassword', data, config)
             .then(res => {
                 this.setState({modalState: 'changePasswordSuccess'});
             })
