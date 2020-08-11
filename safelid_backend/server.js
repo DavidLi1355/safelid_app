@@ -22,8 +22,13 @@ app.listen(port, () => {
     console.log(`Server is running on port: ${port}`);
 });
 
-
-
 // Routes
 app.use('/api', require('./routes/users'));
 app.use('/api/dashboard', require('./routes/dashboard'));
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('safelid_frontend/build'));
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'safelid_frontend', 'build', 'index.html'));
+    });
+}
